@@ -28,26 +28,26 @@ lazy val dddOnScala = (project in file("."))
   .aggregate(domain, infrastructure, application)
   .settings(
     commonSettings,
-    name := "root",
+    name := "dddonscala",
     publishArtifact := false
   )
 
 lazy val domain = (project in file("modules/domain"))
   .settings(
     commonSettings,
-    name := "domain"
+    name := "dddonscala-domain"
   )
 
 lazy val infrastructure = (project in file("modules/infrastructure"))
   .dependsOn(domain)
   .settings(
     commonSettings,
-    name := "infrastructure"
+    name := "dddonscala-infrastructure"
   )
 
 lazy val application = (project in file("modules/application"))
   .dependsOn(domain, infrastructure)
   .settings(
     commonSettings,
-    name := "application"
+    name := "dddonscala-application"
   )
