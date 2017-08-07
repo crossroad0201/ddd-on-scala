@@ -1,8 +1,9 @@
 package crossroad0201.dddonscala.domain.task
 
+import crossroad0201.dddonscala.domain.DomainEvent
 import crossroad0201.dddonscala.domain.user.UserId
 
-trait TaskEvent {
+trait TaskEvent extends DomainEvent {
   val taskId: TaskId
 }
 

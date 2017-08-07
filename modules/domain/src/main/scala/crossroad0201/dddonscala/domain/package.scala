@@ -1,5 +1,11 @@
 package crossroad0201.dddonscala.domain
 
+package object domain {
+
+  type ErrorOr[+ENTITY <: Entity[_ <: EntityId], +EVENT <: DomainEvent] = Either[DomainError, DomainResult[ENTITY, EVENT]]
+
+}
+
 // FIXME インフラ層でプリミティブ値とimplicit wrap/unwrapする
 trait Value[T] {
   val value: T
@@ -25,4 +31,8 @@ trait EntityIdGenerator {
   def genId(): String
 }
 
+trait DomainEvent
+
 trait DomainError
+
+case class DomainResult[+ENTITY <: Entity[_ <: EntityId], +EVENT <: DomainEvent](entity: ENTITY, event: EVENT)

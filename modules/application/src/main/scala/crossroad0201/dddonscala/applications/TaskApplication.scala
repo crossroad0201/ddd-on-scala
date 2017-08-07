@@ -13,24 +13,24 @@ trait TaskApplication {
     import crossroad0201.dddonscala.domain.task._
 
     for {
-      savedTask <- taskRepository.save(
-        user createTask name)
-      _ <- taskEventPublisher publish (TaskCreated at savedTask)
+      createdTask <- Right(user createTask name)
+      savedTask <- taskRepository save createdTask.entity
+      _ <- taskEventPublisher publish createdTask.event
     } yield savedTask
   }
 
   def assignToTask(taskId: TaskId, user: User): Either[ApplicationError, Task] = {
     import crossroad0201.dddonscala.domain.task._
 
-    // FIXME 通らん（１つのfor式のなかで効くimplicitは１種類だけ？）
-    val x = for {
+    // FIXME Either[Object, ...]になってしまう（１つのfor式のなかで効くimplicitは１種類だけ？）
+    for {
       task <- shouldExists(taskRepository.get(taskId).get) // FIXME Try[Option[T]] -> Either[AppError, T]
-      assignedTask = user.assignTo(task)
-      savedTask <- taskRepository.save(assignedTask)
-      _ <- taskEventPublisher publish (TaskAssigned at savedTask)
+      assignedTask = user assignTo task
+      savedTask <- taskRepository save assignedTask.entity
+      _ <- taskEventPublisher publish assignedTask.event
     } yield savedTask
 
-    shouldExists(taskRepository.get(TaskId("xxxx")).get)
+    shouldExists(taskRepository.get(taskId).get)
   }
 
 }
