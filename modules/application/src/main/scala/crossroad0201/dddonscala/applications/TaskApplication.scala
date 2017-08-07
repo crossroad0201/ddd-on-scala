@@ -1,7 +1,7 @@
 package crossroad0201.dddonscala.applications
 
 import crossroad0201.dddonscala.domain.EntityIdGenerator
-import crossroad0201.dddonscala.domain.task.{ Task, TaskEventPublisher, TaskId, TaskName, TaskRepository }
+import crossroad0201.dddonscala.domain.task.{ CommentMessage, Task, TaskEventPublisher, TaskId, TaskName, TaskRepository }
 import crossroad0201.dddonscala.domain.user.User
 
 trait TaskApplication {
@@ -33,7 +33,16 @@ trait TaskApplication {
     } yield savedTask
   }
 
-  // TODO コメント追加
+  def commentToTask(taskId: TaskId, message: CommentMessage, user: User): Either[ApplicationError, Task] = {
+    import crossroad0201.dddonscala.domain.task._
+
+    for {
+      task <- shouldExists(taskRepository.get(taskId))
+      commentedTask = user commentTo (task, message)
+      savedTask <- taskRepository save commentedTask.entity
+      _ <- taskEventPublisher publish commentedTask.event
+    } yield savedTask
+  }
 
   // TODO タスクの完了（Assigneeしか実行できない）
 
