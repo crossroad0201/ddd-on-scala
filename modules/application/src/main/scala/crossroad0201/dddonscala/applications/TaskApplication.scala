@@ -9,9 +9,12 @@ trait TaskApplication {
   val taskRepository: TaskRepository
   val taskEventPublisher: TaskEventPublisher
 
+  // FIXME Unit of Work（DBコミット後に、イベントのパブリッシュする）
+
   def createNewTask(name: TaskName, user: User): Either[ApplicationError, Task] = {
     import crossroad0201.dddonscala.domain.task._
 
+    // FIXME 集約ごとに実装を分けるべきかも
     val createdTask = user createTask name
     for {
       savedTask <- taskRepository save createdTask.entity
@@ -29,5 +32,9 @@ trait TaskApplication {
       _ <- taskEventPublisher publish assignedTask.event
     } yield savedTask
   }
+
+  // TODO コメント追加
+
+  // TODO タスクの完了（Assigneeしか実行できない）
 
 }
