@@ -7,6 +7,7 @@ import scala.util.{ Failure, Success, Try }
 package object applications {
   import scala.language.implicitConversions
 
+  // FIXME xxxx.asApplicationError のほうがいいかもしれない
   implicit def asApplicationError[R](domainResult: Either[DomainError, R]): Either[ApplicationError, R] =
     domainResult match {
       case Right(r) => Right(r)
@@ -19,10 +20,11 @@ package object applications {
       case Failure(e) => Left(new ApplicationError {})
     }
 
-  def shouldExists[T](maybeExists: Option[T]): Either[DomainError, T] =
+  def shouldExists[T](maybeExists: Try[Option[T]]): Either[ApplicationError, T] =
     maybeExists match {
-      case Some(s) => Right(s)
-      case None    => Left(new DomainError {})
+      case Success(Some(s)) => Right(s)
+      case Success(None)    => Left(new ApplicationError {})
+      case Failure(e)       => Left(new ApplicationError {})
     }
 
 }

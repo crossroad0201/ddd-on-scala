@@ -12,8 +12,8 @@ trait TaskApplication {
   def createNewTask(name: TaskName, user: User): Either[ApplicationError, Task] = {
     import crossroad0201.dddonscala.domain.task._
 
+    val createdTask = user createTask name
     for {
-      createdTask <- Right(user createTask name)
       savedTask <- taskRepository save createdTask.entity
       _ <- taskEventPublisher publish createdTask.event
     } yield savedTask
@@ -22,15 +22,12 @@ trait TaskApplication {
   def assignToTask(taskId: TaskId, user: User): Either[ApplicationError, Task] = {
     import crossroad0201.dddonscala.domain.task._
 
-    // FIXME Either[Object, ...]になってしまう（１つのfor式のなかで効くimplicitは１種類だけ？）
     for {
-      task <- shouldExists(taskRepository.get(taskId).get) // FIXME Try[Option[T]] -> Either[AppError, T]
+      task <- shouldExists(taskRepository.get(taskId))
       assignedTask = user assignTo task
       savedTask <- taskRepository save assignedTask.entity
       _ <- taskEventPublisher publish assignedTask.event
     } yield savedTask
-
-    shouldExists(taskRepository.get(taskId).get)
   }
 
 }
