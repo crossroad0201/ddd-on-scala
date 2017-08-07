@@ -1,33 +1,36 @@
 package crossroad0201.dddonscala.applications
 
-import crossroad0201.dddonscala.domain.EntityIdGenerator
-import crossroad0201.dddonscala.domain.task.{ Task, TaskEventPublisher, TaskId, TaskName, TaskRepository }
+import crossroad0201.dddonscala.domain.task.{ Task, TaskId, TaskName, TaskRepository }
 import crossroad0201.dddonscala.domain.user.User
+import crossroad0201.dddonscala.domain.{ EntityIdGenerator, EventPublisher }
+
+import crossroad0201.dddonscala.domain.task._
+import crossroad0201.dddonscala.infrastructure.task.TaskEventMarshallers._
 
 trait TaskApplication {
   implicit val entityIdGenerator: EntityIdGenerator
   val taskRepository: TaskRepository
-  val taskEventPublisher: TaskEventPublisher
+  val eventPublisher: EventPublisher
+
+  // FIXME トランザクション制御（エンティティの保存をコミットしてから、イベントのパブリッシュ）
 
   def createNewTask(name: TaskName, user: User): Either[ApplicationError, Task] = {
-    import crossroad0201.dddonscala.domain.task._
-
+    // FIXME implicitが for式 全体にかかってる。
     val createdTask = user createTask name
     for {
       savedTask <- taskRepository save createdTask.entity
-      _ <- taskEventPublisher publish createdTask.event
+      _ <- eventPublisher publish createdTask.event
     } yield savedTask
   }
 
   def assignToTask(taskId: TaskId, user: User): Either[ApplicationError, Task] = {
-    import crossroad0201.dddonscala.domain.task._
-
     for {
       task <- shouldExists(taskRepository.get(taskId))
       assignedTask = user assignTo task
       savedTask <- taskRepository save assignedTask.entity
-      _ <- taskEventPublisher publish assignedTask.event
+      _ <- eventPublisher publish assignedTask.event
     } yield savedTask
   }
 
 }
+

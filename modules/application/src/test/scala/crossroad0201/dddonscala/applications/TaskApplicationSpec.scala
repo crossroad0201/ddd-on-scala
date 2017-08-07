@@ -1,14 +1,14 @@
 package crossroad0201.dddonscala.applications
 
-import crossroad0201.dddonscala.UUIDEntityIdGenerator
-import crossroad0201.dddonscala.domain.task
-import crossroad0201.dddonscala.domain.task.{ Task, TaskAssigned, TaskCreated, TaskEventPublisher, TaskName, TaskRepository, UnAssignedTask }
+import crossroad0201.dddonscala.domain.task.{ Task, TaskName, TaskRepository, UnAssignedTask }
 import crossroad0201.dddonscala.domain.user.{ User, UserId }
+import crossroad0201.dddonscala.domain.{ DomainEvent, EventMarshaller, EventPublisher, task }
+import crossroad0201.dddonscala.infrastructure.{ JSON, UUIDEntityIdGenerator }
 import org.scalatest.{ FeatureSpec, GivenWhenThen, Matchers }
 
-import scala.util.Try
+import scala.util.{ Success, Try }
 
-class TaskApplicationTest extends FeatureSpec with GivenWhenThen with Matchers {
+class TaskApplicationSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   feature("Sandbox") {
     scenario("Create task and assign user") {
@@ -19,10 +19,14 @@ class TaskApplicationTest extends FeatureSpec with GivenWhenThen with Matchers {
 
           override def save[T <: Task](task: T) = Try(task)
         }
-        override val taskEventPublisher = new TaskEventPublisher {
-          override def publish(event: TaskCreated) = Try(event)
-
-          override def publish(event: TaskAssigned) = Try(event)
+        override val eventPublisher = new EventPublisher {
+          override type Format = JSON
+          override def publish[EVENT <: DomainEvent, JSON](event: EVENT)(implicit marshaller: EventMarshaller[EVENT, JSON]) = {
+            for {
+              marshaled <- marshaller.marshal(event)
+            } yield print(marshaled)
+            Success(event)
+          }
         }
       }
 
