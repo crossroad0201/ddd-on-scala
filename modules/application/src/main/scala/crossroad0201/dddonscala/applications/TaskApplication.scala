@@ -1,13 +1,7 @@
 package crossroad0201.dddonscala.applications
 
 import crossroad0201.dddonscala.domain.EntityIdGenerator
-import crossroad0201.dddonscala.domain.task.{
-  Task,
-  TaskEventPublisher,
-  TaskId,
-  TaskName,
-  TaskRepository
-}
+import crossroad0201.dddonscala.domain.task.{ Task, TaskEventPublisher, TaskId, TaskName, TaskRepository }
 import crossroad0201.dddonscala.domain.user.User
 
 trait TaskApplication {

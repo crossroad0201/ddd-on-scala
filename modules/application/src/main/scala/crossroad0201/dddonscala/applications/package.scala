@@ -7,15 +7,13 @@ import scala.util.{ Failure, Success, Try }
 package object applications {
   import scala.language.implicitConversions
 
-  implicit def asApplicationError[R](
-    domainResult: Either[DomainError, R]): Either[ApplicationError, R] =
+  implicit def asApplicationError[R](domainResult: Either[DomainError, R]): Either[ApplicationError, R] =
     domainResult match {
       case Right(r) => Right(r)
       case Left(l)  => Left(new ApplicationError {})
     }
 
-  implicit def asApplicationError[S](
-    infraResult: Try[S]): Either[ApplicationError, S] =
+  implicit def asApplicationError[S](infraResult: Try[S]): Either[ApplicationError, S] =
     infraResult match {
       case Success(s) => Right(s)
       case Failure(e) => Left(new ApplicationError {})

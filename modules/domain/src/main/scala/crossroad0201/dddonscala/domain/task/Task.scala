@@ -15,20 +15,22 @@ trait Task extends Entity[TaskId] {
 case class UnAssignedTask(
     id:       TaskId,
     name:     TaskName,
-    authorId: UserId) extends Task {
+    authorId: UserId
+) extends Task {
   override def assign(assignee: User): AssignedTask =
     AssignedTask(
       id         = id,
       name       = name,
       authorId   = authorId,
-      assigneeId = assignee.id)
+      assigneeId = assignee.id
+    )
 }
 
 case class AssignedTask(
     id:         TaskId,
     name:       TaskName,
     authorId:   UserId,
-    assigneeId: UserId) extends Task {
-  override def assign(assignee: User): AssignedTask =
-    copy(assigneeId = assignee.id)
+    assigneeId: UserId
+) extends Task {
+  override def assign(assignee: User): AssignedTask = copy(assigneeId = assignee.id)
 }

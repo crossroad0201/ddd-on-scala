@@ -1,12 +1,6 @@
 package crossroad0201.dddonscala.domain
 
-import crossroad0201.dddonscala.domain.task.{
-  AssignedTask,
-  Task,
-  TaskId,
-  TaskName,
-  UnAssignedTask
-}
+import crossroad0201.dddonscala.domain.task.{ AssignedTask, Task, TaskCreated, TaskId, TaskName, UnAssignedTask }
 import crossroad0201.dddonscala.domain.user.User
 
 package object task {
@@ -26,13 +20,12 @@ package object task {
 }
 
 case class Author(user: User) {
-  def createTask(name: TaskName)(
-    implicit
-    idGen: EntityIdGenerator): UnAssignedTask = {
+  def createTask(name: TaskName)(implicit idGen: EntityIdGenerator): UnAssignedTask = {
     UnAssignedTask(
       id       = TaskId.newId,
       name     = name,
-      authorId = user.id)
+      authorId = user.id
+    )
   }
 }
 
