@@ -8,7 +8,7 @@ package object domain {
   }
 
   case class DomainResult[+ENTITY <: Entity[_ <: EntityId], +EVENT <: DomainEvent](entity: ENTITY, event: EVENT)
-  type ErrorOr[+ENTITY <: Entity[_ <: EntityId], +EVENT <: DomainEvent] = Either[DomainError, DomainResult[ENTITY, EVENT]]
+  type ErrorOr[+ENTITY <: Entity[_ <: EntityId], +EVENT <: DomainEvent] =
+    Either[DomainError, DomainResult[ENTITY, EVENT]]
 
 }
-

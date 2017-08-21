@@ -12,6 +12,7 @@ package object task {
   }
 
   case class TaskName(value: String) extends Value[String]
+
   case class CommentMessage(value: String) extends Value[String]
 
   implicit def asTaskAuthor(user: User): Author = Author(user)
@@ -43,4 +44,3 @@ package object task {
     }
   }
 }
-

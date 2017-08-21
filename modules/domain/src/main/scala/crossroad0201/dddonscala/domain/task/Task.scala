@@ -1,18 +1,19 @@
 package crossroad0201.dddonscala.domain.task
 
-import crossroad0201.dddonscala.domain.{ DomainResult, Entity }
-import crossroad0201.dddonscala.domain.user.{ User, UserId }
+import crossroad0201.dddonscala.domain.{DomainResult, Entity}
+import crossroad0201.dddonscala.domain.user.{User, UserId}
 
 trait Task extends Entity[TaskId] {
   type SelfType <: Task
 
-  val id: TaskId
-  val name: TaskName
+  val id:       TaskId
+  val name:     TaskName
   val authorId: UserId
   val comments: Comments
 
   // FIXME 引数は　Assignee のほうがいい？
   def assign(assignee: User): DomainResult[AssignedTask, TaskAssigned]
+
   def addComment(comment: Comment): DomainResult[SelfType, TaskCommented]
 }
 

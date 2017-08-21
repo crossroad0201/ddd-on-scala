@@ -2,7 +2,7 @@ package crossroad0201.dddonscala
 
 import crossroad0201.dddonscala.domain.DomainError
 
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 package object applications {
   import scala.language.implicitConversions

@@ -7,7 +7,7 @@ trait Entity[ID <: EntityId] {
     // FIXME 同じエンティティ型かどうか
     obj match {
       case that: Entity[_] => this.id == that.id
-      case _               => false
+      case _ => false
     }
 
   override def hashCode(): Int = 31 + id.hashCode

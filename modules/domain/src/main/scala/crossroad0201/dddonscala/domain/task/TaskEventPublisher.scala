@@ -5,7 +5,9 @@ import scala.util.Try
 trait TaskEventPublisher {
 
   def publish(event: TaskCreated): Try[TaskCreated]
+
   def publish(event: TaskAssigned): Try[TaskAssigned]
+
   def publish(event: TaskCommented): Try[TaskCommented]
 
 }

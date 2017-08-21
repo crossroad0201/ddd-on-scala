@@ -1,26 +1,14 @@
 import Dependencies._
 
-import scalariform.formatter.preferences._
-import com.typesafe.sbt.SbtScalariform
-import com.typesafe.sbt.SbtScalariform.ScalariformKeys
-
 lazy val commonSettings = Seq(
   organization := "crossroad0201.dddonscala",
   version := "0.1.0-SNAPSHOT",
-
   scalaVersion := "2.12.3",
   scalacOptions := Seq(
     "-deprecation",
     "-feature"
   ),
-  ScalariformKeys.preferences := ScalariformKeys.preferences.value
-    .setPreference(AlignArguments, true)
-    .setPreference(AlignParameters, true)
-    .setPreference(AlignSingleLineCaseStatements, true)
-    .setPreference(DoubleIndentConstructorArguments, true)
-    .setPreference(DanglingCloseParenthesis, Preserve)
-    .setPreference(NewlineAtEndOfFile, true),
-
+  scalafmtOnCompile in ThisBuild := true,
   libraryDependencies += scalaTest % Test
 )
 

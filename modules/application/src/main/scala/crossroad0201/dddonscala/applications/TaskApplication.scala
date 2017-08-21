@@ -1,13 +1,20 @@
 package crossroad0201.dddonscala.applications
 
 import crossroad0201.dddonscala.domain.EntityIdGenerator
-import crossroad0201.dddonscala.domain.task.{ CommentMessage, Task, TaskEventPublisher, TaskId, TaskName, TaskRepository }
+import crossroad0201.dddonscala.domain.task.{
+  CommentMessage,
+  Task,
+  TaskEventPublisher,
+  TaskId,
+  TaskName,
+  TaskRepository
+}
 import crossroad0201.dddonscala.domain.user.User
 
 trait TaskApplication {
   implicit val entityIdGenerator: EntityIdGenerator
-  val taskRepository: TaskRepository
-  val taskEventPublisher: TaskEventPublisher
+  val taskRepository:             TaskRepository
+  val taskEventPublisher:         TaskEventPublisher
 
   // FIXME Unit of Work（DBコミット後に、イベントのパブリッシュする）
 
@@ -18,7 +25,7 @@ trait TaskApplication {
     val createdTask = user createTask name
     for {
       savedTask <- taskRepository save createdTask.entity
-      _ <- taskEventPublisher publish createdTask.event
+      _         <- taskEventPublisher publish createdTask.event
     } yield savedTask
   }
 
@@ -29,7 +36,7 @@ trait TaskApplication {
       task <- shouldExists(taskRepository.get(taskId))
       assignedTask = user assignTo task
       savedTask <- taskRepository save assignedTask.entity
-      _ <- taskEventPublisher publish assignedTask.event
+      _         <- taskEventPublisher publish assignedTask.event
     } yield savedTask
   }
 
@@ -40,7 +47,7 @@ trait TaskApplication {
       task <- shouldExists(taskRepository.get(taskId))
       commentedTask = user commentTo (task, message)
       savedTask <- taskRepository save commentedTask.entity
-      _ <- taskEventPublisher publish commentedTask.event
+      _         <- taskEventPublisher publish commentedTask.event
     } yield savedTask
   }
 

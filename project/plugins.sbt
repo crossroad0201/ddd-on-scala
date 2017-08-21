@@ -7,8 +7,9 @@ addSbtPlugin("io.get-coursier" % "sbt-coursier" % "1.0.0-RC3")
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.8.2")
 
 // --- Scalaコードのフォーマット
-// https://github.com/sbt/sbt-scalariform
-addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.7.1")
+// https://github.com/scalameta/scalafmt
+// https://github.com/lucidsoftware/neo-sbt-scalafmt
+addSbtPlugin("com.lucidchart" % "sbt-scalafmt-coursier" % "1.10")
 
 // --- Scalaコンパイルエラーを見やすく
 // https://github.com/Duhemm/sbt-errors-summary
