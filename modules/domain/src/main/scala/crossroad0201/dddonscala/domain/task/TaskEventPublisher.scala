@@ -2,12 +2,9 @@ package crossroad0201.dddonscala.domain.task
 
 import scala.util.Try
 
+// FIXME サンプル実装を作る
 trait TaskEventPublisher {
 
-  def publish(event: TaskCreated): Try[TaskCreated]
-
-  def publish(event: TaskAssigned): Try[TaskAssigned]
-
-  def publish(event: TaskCommented): Try[TaskCommented]
+  def publish[EVENT <: TaskEvent](event: EVENT): Try[EVENT]
 
 }

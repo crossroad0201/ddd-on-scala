@@ -17,8 +17,20 @@ case class TaskAssigned(
     assigneeId: UserId
 ) extends TaskEvent
 
+case class TaskUnAssigned(
+    taskId: TaskId
+) extends TaskEvent
+
 case class TaskCommented(
     taskId:      TaskId,
     commenterId: UserId,
     message:     CommentMessage
+) extends TaskEvent
+
+case class TaskClosed(
+    taskId: TaskId
+) extends TaskEvent
+
+case class TaskReOpened(
+    taskId: TaskId
 ) extends TaskEvent

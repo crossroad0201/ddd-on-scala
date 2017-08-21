@@ -15,7 +15,13 @@ package object task {
 
   case class CommentMessage(value: String) extends Value[String]
 
-  implicit def asTaskAuthor(user: User): Author = Author(user)
+  sealed abstract class TaskState
+  object TaskState {
+    case object Opened extends TaskState
+    case object Closed extends TaskState
+  }
+
+  implicit def asAuthor(user: User): Author = Author(user)
   case class Author(user: User) {
     def createTask(name: TaskName)(implicit idGen: EntityIdGenerator): DomainResult[UnAssignedTask, TaskCreated] = {
       val task = UnAssignedTask(
@@ -31,15 +37,15 @@ package object task {
     }
   }
 
-  implicit def asTaskAssignee(user: User): Assignee = Assignee(user)
+  implicit def asAssignee(user: User): Assignee = Assignee(user)
   case class Assignee(user: User) {
-    def assignTo(task: Task): DomainResult[AssignedTask, TaskAssigned] = task assign user
+    def assignTo(task: Task): Either[TaskAlreadyClosed, DomainResult[AssignedTask, TaskAssigned]] = task assign user
   }
 
   implicit def asCommenter(user: User): Commenter = Commenter(user)
   case class Commenter(user: User) {
     def commentTo[TASK <: Task](task: TASK, message: CommentMessage): DomainResult[TASK, TaskCommented] = {
-      // FIXME asInstanceOf したくない
+      // TODO asInstanceOf したくない
       task.addComment(Comment(message, user.id)).asInstanceOf[DomainResult[TASK, TaskCommented]]
     }
   }
