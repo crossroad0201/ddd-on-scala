@@ -9,6 +9,7 @@ lazy val commonSettings = Seq(
     "-feature"
   ),
   scalafmtOnCompile in ThisBuild := true,
+  scalafmtTestOnCompile in ThisBuild := true,
   libraryDependencies += scalaTest % Test
 )
 
