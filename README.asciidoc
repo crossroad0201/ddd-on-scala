@@ -1,0 +1,19 @@
+
+
+
+
+### 参考サイト
+
+#### Scala
+
+* https://dwango.github.io/scala_text/[ドワンゴさんのScala研修用テキスト]
+* https://tpolecat.github.io/2015/04/29/f-bounds.html[Returning the "Current" Type in Scala]
+
+#### DDD
+
+* http://labs.gree.jp/blog/2013/12/9354/[Scalaコードでわかった気になるDDD]
+
+#### その他
+
+* http://powerman.name/doc/asciidoc[AsciiDoc cheatsheet] +
+AsciiDoc（このREADMEでも使用しているマークダウン言語）の書き方。一般的な Markdown よりも表現力が強力。
