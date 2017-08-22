@@ -25,9 +25,9 @@ trait TaskService {
   // FIXME Unit of Work（DBコミット後に、イベントのパブリッシュする）
 
   private implicit val taskAlreadyClosedHandler: TaskAlreadyClosed => ServiceError = (e) =>
-    InvalidTaskOperationError(e.task.id)
+    IllegalTaskOperationError(e.task)
   private implicit val taskAlreadyOpenedHandler: TaskAlreadyOpened => ServiceError = (e) =>
-    InvalidTaskOperationError(e.task.id)
+    IllegalTaskOperationError(e.task)
 
   def createNewTask(name: TaskName, user: User): Either[ServiceError, Task] = {
     import crossroad0201.dddonscala.domain.task._
@@ -99,4 +99,5 @@ trait TaskService {
 
 }
 
-case class InvalidTaskOperationError(taskId: TaskId) extends ApplicationError("error.invalidTaskOperation", taskId)
+case class IllegalTaskOperationError(task: Task)
+    extends ApplicationError("error.invalidTaskOperation", task.id, task.state)

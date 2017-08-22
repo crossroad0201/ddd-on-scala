@@ -6,7 +6,7 @@ import crossroad0201.dddonscala.infrastructure.rdb.OptimisticLockException
 abstract sealed class ServiceError(val errorCode: ErrorCode, val args: Any*) {
   protected val stackTrace = {
     val traces = Thread.currentThread().getStackTrace
-    traces.drop(traces.lastIndexWhere(t => t.getFileName.contains("ApplicationError.scala")) + 1)
+    traces.drop(traces.lastIndexWhere(t => t.getClassName == getClass.getName) + 1)
   }
 
   override def toString = {

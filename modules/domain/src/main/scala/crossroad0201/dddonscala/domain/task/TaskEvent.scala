@@ -6,6 +6,7 @@ import crossroad0201.dddonscala.domain.user.UserId
 sealed trait TaskEvent extends DomainEvent {
   val taskId: TaskId
 }
+// FIXME at メソッドを用意
 
 case class TaskCreated(
     taskId: TaskId,
