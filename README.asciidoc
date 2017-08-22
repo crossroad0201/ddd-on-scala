@@ -1,19 +1,29 @@
+:toc:
 
+= Sandbox
 
+Now printing...
 
+== 参考サイト
 
-### 参考サイト
+=== Scala
 
-#### Scala
+* https://dwango.github.io/scala_text/[ドワンゴさんのScala研修用テキスト] +
+Scalaの入門テキスト。
+* http://www.ne.jp/asahi/hishidama/home/tech/scala/index.html[HishidamaさんのScalaリファレンス] +
+Scalaのよく使う言語機能やAPIのリファレンス。
+* http://twitter.github.io/effectivescala/index-ja.html[Effective Scala] +
+Scalaの標準的なコーディング規約。
 
-* https://dwango.github.io/scala_text/[ドワンゴさんのScala研修用テキスト]
-* https://tpolecat.github.io/2015/04/29/f-bounds.html[Returning the "Current" Type in Scala]
+* https://tpolecat.github.io/2015/04/29/f-bounds.html[Returning the "Current" Type in Scala] +
+スーパータイプのメソッドの戻り値の型として、サブタイプを使用する方法の解説。
 
-#### DDD
+=== DDD（ドメイン駆動設計）
 
-* http://labs.gree.jp/blog/2013/12/9354/[Scalaコードでわかった気になるDDD]
+* http://labs.gree.jp/blog/2013/12/9354/[Scalaコードでわかった気になるDDD] +
+Scalaを使ったDDDの解説。
 
-#### その他
+=== その他
 
 * http://powerman.name/doc/asciidoc[AsciiDoc cheatsheet] +
 AsciiDoc（このREADMEでも使用しているマークダウン言語）の書き方。一般的な Markdown よりも表現力が強力。

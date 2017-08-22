@@ -5,13 +5,13 @@ import crossroad0201.dddonscala.infrastructure.rdb.OptimisticLockException
 
 import scala.util.{Failure, Success, Try}
 
-package object applications {
+package object application {
   import scala.language.implicitConversions
 
   type ErrorCode = String
 
   implicit class DomainErrorOps[E <: DomainError, R](domainResult: Either[E, R]) {
-    def ifLeftThen(f: E => ApplicationError): Either[ApplicationError, R] = {
+    def ifLeftThen(f: E => ServiceError): Either[ServiceError, R] = {
       domainResult match {
         case Left(e)  => Left(f(e))
         case Right(r) => Right(r)
@@ -20,7 +20,7 @@ package object applications {
   }
 
   implicit class InfraErrorOps[S](infraResult: Try[S]) {
-    def ifFailureThen(f: Throwable => ApplicationError): Either[ApplicationError, S] = {
+    def ifFailureThen(f: Throwable => ServiceError): Either[ServiceError, S] = {
       infraResult match {
         case Failure(e) => Left(f(e))
         case Success(s) => Right(s)
@@ -29,7 +29,7 @@ package object applications {
   }
 
   implicit class TryOptionOps[T](maybeValue: Try[Option[T]]) {
-    def ifNotExists(f: => ApplicationError): Either[ApplicationError, T] = {
+    def ifNotExists(f: => ServiceError): Either[ServiceError, T] = {
       maybeValue match {
         case Success(Some(s)) => Right(s)
         case Success(None)    => Left(f)
@@ -38,9 +38,9 @@ package object applications {
     }
   }
 
-  def applicationError[E](implicit f: E => ApplicationError): E => ApplicationError = f
+  def asServiceError[E](implicit f: E => ServiceError): E => ServiceError = f
 
-  implicit val defaultThrowableHandler: Throwable => ApplicationError = {
+  implicit val defaultThrowableHandler: Throwable => ServiceError = {
     case e: OptimisticLockException => ConflictError(e)
     case e => SystemError(e)
   }

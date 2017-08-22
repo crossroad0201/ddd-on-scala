@@ -1,4 +1,4 @@
-package crossroad0201.dddonscala.applications
+package crossroad0201.dddonscala.application
 
 import crossroad0201.dddonscala.UUIDEntityIdGenerator
 import crossroad0201.dddonscala.domain.task
@@ -17,7 +17,7 @@ import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 import scala.collection.mutable
 import scala.util.Success
 
-class TaskApplicationSpec extends FeatureSpec with GivenWhenThen with Matchers {
+class TaskServiceSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   feature("Sandbox") {
     scenario("Create task and assign user") {
@@ -42,7 +42,7 @@ class TaskApplicationSpec extends FeatureSpec with GivenWhenThen with Matchers {
     }
   }
 
-  trait WithFixture extends TaskApplication {
+  trait WithFixture extends TaskService {
     override implicit val entityIdGenerator = UUIDEntityIdGenerator
 
     override val taskRepository = new TaskRepository {

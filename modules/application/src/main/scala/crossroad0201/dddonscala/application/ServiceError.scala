@@ -1,9 +1,9 @@
-package crossroad0201.dddonscala.applications
+package crossroad0201.dddonscala.application
 
 import crossroad0201.dddonscala.domain.EntityId
 import crossroad0201.dddonscala.infrastructure.rdb.OptimisticLockException
 
-abstract sealed class ApplicationError(val errorCode: ErrorCode, val args: Any*) {
+abstract sealed class ServiceError(val errorCode: ErrorCode, val args: Any*) {
   protected val stackTrace = {
     val traces = Thread.currentThread().getStackTrace
     traces.drop(traces.lastIndexWhere(t => t.getFileName.contains("ApplicationError.scala")) + 1)
@@ -16,11 +16,11 @@ abstract sealed class ApplicationError(val errorCode: ErrorCode, val args: Any*)
   }
 }
 
-case class SystemError(cause: Throwable) extends ApplicationError("error.system")
+case class SystemError(cause: Throwable) extends ServiceError("error.system")
 
-abstract class BusinessError(errorCode: ErrorCode, args: Any*) extends ApplicationError(errorCode, args: _*)
+abstract class ApplicationError(errorCode: ErrorCode, args: Any*) extends ServiceError(errorCode, args: _*)
 
-case class NotFoundError(entityType: String, id: EntityId) extends BusinessError("error.notFound", entityType, id)
+case class NotFoundError(entityType: String, id: EntityId) extends ApplicationError("error.notFound", entityType, id)
 
 case class ConflictError(cause: OptimisticLockException)
-    extends BusinessError("error.conflict", cause.id, cause.version)
+    extends ApplicationError("error.conflict", cause.id, cause.version)

@@ -2,6 +2,8 @@ package crossroad0201.dddonscala
 
 package object domain {
 
+  // FIXME DDDのコンポーネントの種類がわかりやすいように、説明用のアノテーションでもつける？
+
   // FIXME インフラ層でプリミティブ値とimplicit wrap/unwrapする
   trait Value[T] {
     val value: T
