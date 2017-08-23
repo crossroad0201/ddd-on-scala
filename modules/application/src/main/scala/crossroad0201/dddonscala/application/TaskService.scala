@@ -2,7 +2,6 @@ package crossroad0201.dddonscala.application
 
 import crossroad0201.dddonscala.domain.EntityIdGenerator
 import crossroad0201.dddonscala.domain.task.{
-  AssignedTask,
   CommentMessage,
   Task,
   TaskAlreadyClosed,
@@ -55,17 +54,11 @@ trait TaskService {
 
   def unAssignFromTask(taskId: TaskId): Either[ServiceError, Task] = {
     for {
-      task <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
-      unAssignedTask <- task match {
-        case t: AssignedTask =>
-          for {
-            unAssignedTask <- t.unAssign ifLeftThen asServiceError
-            savedTask      <- taskRepository.save(unAssignedTask.entity) ifFailureThen asServiceError
-            _              <- taskEventPublisher.publish(unAssignedTask.event) ifFailureThen asServiceError
-          } yield savedTask
-        case t => Right(t)
-      }
-    } yield unAssignedTask
+      task           <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
+      unAssignedTask <- task.unAssign ifLeftThen asServiceError
+      savedTask      <- taskRepository.save(unAssignedTask.entity) ifFailureThen asServiceError
+      _              <- taskEventPublisher.publish(unAssignedTask.event) ifFailureThen asServiceError
+    } yield savedTask
   }
 
   def commentToTask(taskId: TaskId, user: User, message: CommentMessage): Either[ServiceError, Task] = {

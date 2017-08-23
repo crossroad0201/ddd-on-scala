@@ -1,106 +1,19 @@
 package crossroad0201.dddonscala.domain.task
 
 import crossroad0201.dddonscala.domain.task.TaskState.{Closed, Opened}
-import crossroad0201.dddonscala.domain.user.{User, UserId}
 import crossroad0201.dddonscala.domain.{DomainResult, Entity}
+import crossroad0201.dddonscala.domain.user.{User, UserId}
 
-// 状態を継承で表現する版
-
-sealed trait Task extends Entity[TaskId] {
-  val id:       TaskId
-  val name:     TaskName
-  val state:    TaskState
-  val authorId: UserId
-  val comments: Comments
-
-  def close:  Either[TaskAlreadyClosed, DomainResult[Task, TaskClosed]]
-  def reOpen: Either[TaskAlreadyOpened, DomainResult[Task, TaskReOpened]]
-
-  def assign(assignee: User): Either[TaskAlreadyClosed, DomainResult[AssignedTask, TaskAssigned]]
-
-  def addComment(comment: Comment): DomainResult[Task, TaskCommented]
-}
-
-case class UnAssignedTask(
-    id:       TaskId,
-    name:     TaskName,
-    state:    TaskState = TaskState.Opened,
-    authorId: UserId,
-    comments: Comments = Comments.Nothing
-) extends Task {
-
-  override def close: Either[TaskAlreadyClosed, DomainResult[UnAssignedTask, TaskClosed]] = {
-    state match {
-      case Opened =>
-        val task = copy(
-          state = TaskState.Closed
-        )
-        val event = TaskClosed(
-          taskId = task.id
-        )
-        Right(DomainResult(task, event))
-      case _ => Left(TaskAlreadyClosed(this))
-    }
-  }
-
-  override def reOpen: Either[TaskAlreadyOpened, DomainResult[UnAssignedTask, TaskReOpened]] = {
-    state match {
-      case Closed =>
-        val task = copy(
-          state = TaskState.Opened
-        )
-        val event = TaskReOpened(
-          taskId = task.id
-        )
-        Right(DomainResult(task, event))
-      case _ => Left(TaskAlreadyOpened(this))
-    }
-  }
-
-  override def assign(assignee: User): Either[TaskAlreadyClosed, DomainResult[AssignedTask, TaskAssigned]] = {
-    state match {
-      case Opened =>
-        val task = AssignedTask(
-          id         = id,
-          name       = name,
-          state      = state,
-          authorId   = authorId,
-          assigneeId = assignee.id,
-          comments   = comments
-        )
-        val event = TaskAssigned(
-          taskId     = task.id,
-          assigneeId = task.assigneeId
-        )
-        Right(DomainResult(task, event))
-      case _ => Left(TaskAlreadyClosed(this))
-    }
-  }
-
-  // FIXME 各サブクラスで実装するのは冗長...
-  override def addComment(comment: Comment): DomainResult[UnAssignedTask, TaskCommented] = {
-    val task = copy(
-      comments = comments add comment
-    )
-    val event = TaskCommented(
-      taskId      = task.id,
-      commenterId = comment.commenterId,
-      message     = comment.message
-    )
-    DomainResult(task, event)
-  }
-}
-
-case class AssignedTask(
+case class Task(
     id:         TaskId,
     name:       TaskName,
     state:      TaskState = TaskState.Opened,
     authorId:   UserId,
-    assigneeId: UserId,
+    assignment: Assignment = Assignment.notAssigned,
     comments:   Comments = Comments.Nothing
-) extends Task {
+) extends Entity[TaskId] {
 
-  override def close: Either[TaskAlreadyClosed, DomainResult[AssignedTask, TaskClosed]] = {
+  def close: Either[TaskAlreadyClosed, DomainResult[Task, TaskClosed]] = {
     state match {
       case Opened =>
         val task = copy(
@@ -114,7 +27,7 @@ case class AssignedTask(
     }
   }
 
-  override def reOpen: Either[TaskAlreadyOpened, DomainResult[AssignedTask, TaskReOpened]] = {
+  def reOpen: Either[TaskAlreadyOpened, DomainResult[Task, TaskReOpened]] = {
     state match {
       case Closed =>
         val task = copy(
@@ -128,16 +41,24 @@ case class AssignedTask(
     }
   }
 
-  def unAssign: Either[TaskAlreadyClosed, DomainResult[UnAssignedTask, TaskUnAssigned]] = {
+  def assign(assignee: User): Either[TaskAlreadyClosed, DomainResult[Task, TaskAssigned]] = {
     state match {
       case Opened =>
-        val task = UnAssignedTask(
-          id       = id,
-          name     = name,
-          state    = state,
-          authorId = authorId,
-          comments = comments
+        val task = copy(assignment = Assignment.assignedBy(assignee.id))
+        val event = TaskAssigned(
+          taskId     = task.id,
+          assigneeId = assignee.id
         )
+        Right(DomainResult(task, event))
+      case _ => Left(TaskAlreadyClosed(this))
+    }
+  }
+
+  def unAssign: Either[TaskAlreadyClosed, DomainResult[Task, TaskUnAssigned]] = {
+    // FIXME すでに unAssign されていたら...? べき等にする? べき等なときにイベント発行する？
+    state match {
+      case Opened =>
+        val task = copy(assignment = Assignment.notAssigned) // FIXME clearを呼ぶようにしたいが...
         val event = TaskUnAssigned(
           taskId = task.id
         )
@@ -146,24 +67,9 @@ case class AssignedTask(
     }
   }
 
-  override def assign(assignee: User): Either[TaskAlreadyClosed, DomainResult[AssignedTask, TaskAssigned]] = {
-    state match {
-      case Opened =>
-        val task = copy(
-          assigneeId = assignee.id
-        )
-        val event = TaskAssigned(
-          taskId     = task.id,
-          assigneeId = task.assigneeId
-        )
-        Right(DomainResult(task, event))
-      case _ => Left(TaskAlreadyClosed(this))
-    }
-  }
-
-  override def addComment(comment: Comment): DomainResult[AssignedTask, TaskCommented] = {
+  def addComment(comment: Comment): DomainResult[Task, TaskCommented] = {
     val task = copy(
-      comments = comments add comment
+      comments = comments.add(comment)
     )
     val event = TaskCommented(
       taskId      = task.id,
@@ -172,4 +78,13 @@ case class AssignedTask(
     )
     DomainResult(task, event)
   }
+}
+
+trait Assignment
+case class Assigned(assigneeId: UserId) extends Assignment {
+  def clear = Assignment.notAssigned
+}
+object Assignment {
+  case object notAssigned extends Assignment
+  def assignedBy(assigneeId: UserId): Assigned = Assigned(assigneeId)
 }

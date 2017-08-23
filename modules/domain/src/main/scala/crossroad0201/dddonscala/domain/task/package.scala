@@ -15,6 +15,7 @@ package object task {
 
   case class CommentMessage(value: String) extends Value[String]
 
+  // FIXME ステータスによって実行可否が異なる振る舞いは、この列挙型に問い合わせたい
   sealed abstract class TaskState
   object TaskState {
     case object Opened extends TaskState
@@ -23,8 +24,8 @@ package object task {
 
   implicit def asAuthor(user: User): Author = Author(user)
   case class Author(user: User) {
-    def createTask(name: TaskName)(implicit idGen: EntityIdGenerator): DomainResult[UnAssignedTask, TaskCreated] = {
-      val task = UnAssignedTask(
+    def createTask(name: TaskName)(implicit idGen: EntityIdGenerator): DomainResult[Task, TaskCreated] = {
+      val task = Task(
         id       = TaskId.newId,
         name     = name,
         authorId = user.id
@@ -39,14 +40,13 @@ package object task {
 
   implicit def asAssignee(user: User): Assignee = Assignee(user)
   case class Assignee(user: User) {
-    def assignTo(task: Task): Either[TaskAlreadyClosed, DomainResult[AssignedTask, TaskAssigned]] = task assign user
+    def assignTo(task: Task): Either[TaskAlreadyClosed, DomainResult[Task, TaskAssigned]] = task assign user
   }
 
   implicit def asCommenter(user: User): Commenter = Commenter(user)
   case class Commenter(user: User) {
-    def commentTo[TASK <: Task](task: TASK, message: CommentMessage): DomainResult[TASK, TaskCommented] = {
-      // TODO asInstanceOf したくない
-      task.addComment(Comment(message, user.id)).asInstanceOf[DomainResult[TASK, TaskCommented]]
+    def commentTo(task: Task, message: CommentMessage): DomainResult[Task, TaskCommented] = {
+      task.addComment(Comment(message, user.id))
     }
   }
 }
