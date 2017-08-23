@@ -1,7 +1,7 @@
 package crossroad0201.dddonscala.application
 
 import crossroad0201.dddonscala.UUIDEntityIdGenerator
-import crossroad0201.dddonscala.domain.task
+import crossroad0201.dddonscala.domain.{task, UnitOfWork}
 import crossroad0201.dddonscala.domain.task.{
   CommentMessage,
   Task,
@@ -47,11 +47,11 @@ class TaskServiceSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
     override val taskRepository = new TaskRepository {
       val entities = mutable.Map[TaskId, Task]()
-      override def get(id: task.TaskId) = {
+      override def get(id: task.TaskId)(implicit uof: UnitOfWork) = {
         println(s"TaskRepository#get($id)")
         Success(entities.get(id))
       }
-      override def save[T <: Task](task: T) = {
+      override def save[T <: Task](task: T)(implicit uow: UnitOfWork) = {
         println(s"TaskRepository#save($task)")
         entities.put(task.id, task)
         Success(task)

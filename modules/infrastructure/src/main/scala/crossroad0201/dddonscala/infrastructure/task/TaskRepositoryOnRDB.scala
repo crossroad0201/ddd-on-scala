@@ -1,17 +1,16 @@
 package crossroad0201.dddonscala.infrastructure.task
 
+import crossroad0201.dddonscala.domain.UnitOfWork
 import crossroad0201.dddonscala.domain.task._
 import crossroad0201.dddonscala.domain.user.UserId
+import crossroad0201.dddonscala.infrastructure.rdb.ScalikeJdbcAware
 import scalikejdbc._
 
 import scala.util.Try
 
-class TaskRepositoryOnRDB extends TaskRepository {
+class TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
 
-  override def get(id: TaskId): Try[Option[Task]] = Try {
-    // FIXME DBSessionを持ち回る
-    implicit val session: DBSession = ???
-
+  override def get(id: TaskId)(implicit uof: UnitOfWork) = Try {
     def getTask: Option[Task] = {
       sql"""
         |SELECT
@@ -62,6 +61,6 @@ class TaskRepositoryOnRDB extends TaskRepository {
   }
 
   // FIXME TaskRepo#save を実装する
-  override def save[T <: Task](task: T) = ???
+  override def save[T <: Task](task: T)(implicit uof: UnitOfWork) = ???
 
 }

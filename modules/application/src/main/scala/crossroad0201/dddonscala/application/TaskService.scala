@@ -1,6 +1,6 @@
 package crossroad0201.dddonscala.application
 
-import crossroad0201.dddonscala.domain.EntityIdGenerator
+import crossroad0201.dddonscala.domain.{EntityIdGenerator, UnitOfWork}
 import crossroad0201.dddonscala.domain.task.{
   CommentMessage,
   Task,
@@ -12,6 +12,7 @@ import crossroad0201.dddonscala.domain.task.{
   TaskRepository
 }
 import crossroad0201.dddonscala.domain.user.User
+import crossroad0201.dddonscala.infrastructure.rdb.ScalikeJdbcSessionHolder
 
 import scala.language.postfixOps
 
@@ -31,6 +32,11 @@ trait TaskService {
   def createNewTask(name: TaskName, user: User): Either[ServiceError, Task] = {
     import crossroad0201.dddonscala.domain.task._
 
+    // FIXME UnitOfWorkを供給する tx { uof => .... } みたいな
+    implicit val uof = new UnitOfWork with ScalikeJdbcSessionHolder {
+      override val dbSession = null
+    }
+
     val createdTask = user.createTask(name)
     for {
       savedTask <- taskRepository.save(createdTask.entity) ifFailureThen asServiceError
@@ -40,6 +46,11 @@ trait TaskService {
 
   def assignToTask(taskId: TaskId, user: User): Either[ServiceError, Task] = {
     import crossroad0201.dddonscala.domain.task._
+
+    // FIXME UnitOfWorkを供給する tx { uof => .... } みたいな
+    implicit val uof = new UnitOfWork with ScalikeJdbcSessionHolder {
+      override val dbSession = null
+    }
 
     for {
       task         <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
@@ -53,6 +64,11 @@ trait TaskService {
   }
 
   def unAssignFromTask(taskId: TaskId): Either[ServiceError, Task] = {
+    // FIXME UnitOfWorkを供給する tx { uof => .... } みたいな
+    implicit val uof = new UnitOfWork with ScalikeJdbcSessionHolder {
+      override val dbSession = null
+    }
+
     for {
       task           <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
       unAssignedTask <- task.unAssign ifLeftThen asServiceError
@@ -64,6 +80,11 @@ trait TaskService {
   def commentToTask(taskId: TaskId, user: User, message: CommentMessage): Either[ServiceError, Task] = {
     import crossroad0201.dddonscala.domain.task._
 
+    // FIXME UnitOfWorkを供給する tx { uof => .... } みたいな
+    implicit val uof = new UnitOfWork with ScalikeJdbcSessionHolder {
+      override val dbSession = null
+    }
+
     for {
       task <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
       commentedTask = user.commentTo(task, message)
@@ -73,6 +94,11 @@ trait TaskService {
   }
 
   def closeTask(taskId: TaskId): Either[ServiceError, Task] = {
+    // FIXME UnitOfWorkを供給する tx { uof => .... } みたいな
+    implicit val uof = new UnitOfWork with ScalikeJdbcSessionHolder {
+      override val dbSession = null
+    }
+
     for {
       task       <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
       closedTask <- task.close ifLeftThen asServiceError
@@ -82,6 +108,11 @@ trait TaskService {
   }
 
   def reOpenTask(taskId: TaskId): Either[ServiceError, Task] = {
+    // FIXME UnitOfWorkを供給する tx { uof => .... } みたいな
+    implicit val uof = new UnitOfWork with ScalikeJdbcSessionHolder {
+      override val dbSession = null
+    }
+
     for {
       task         <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
       reOpenedTask <- task.reOpen ifLeftThen asServiceError
