@@ -1,8 +1,21 @@
 package crossroad0201.dddonscala
 
+import scala.annotation.StaticAnnotation
+
 package object domain {
 
-  // FIXME DDDのコンポーネントの種類がわかりやすいように、説明用のアノテーションでもつける？
+  /*
+   * DDDにおけるどのコンポーネントなのかをわかりやすくするための
+   * 説明用のアノテーションです。
+   * 実際はこのようなアノテーションは作りません。
+   */
+  class entity extends StaticAnnotation
+  class valueobject extends StaticAnnotation
+  class factory extends StaticAnnotation
+  class repository extends StaticAnnotation
+  class domainservice extends StaticAnnotation  // FIXME ドメインサービスの例がない
+  class domainevent extends StaticAnnotation
+  class eventpublisher extends StaticAnnotation
 
   // FIXME インフラ層でプリミティブ値とimplicit wrap/unwrapする
   trait Value[T] {
@@ -10,7 +23,5 @@ package object domain {
   }
 
   case class DomainResult[+ENTITY <: Entity[_ <: EntityId], +EVENT <: DomainEvent](entity: ENTITY, event: EVENT)
-  type ErrorOr[+ENTITY <: Entity[_ <: EntityId], +EVENT <: DomainEvent] =
-    Either[DomainError, DomainResult[ENTITY, EVENT]]
 
 }

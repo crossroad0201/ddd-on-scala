@@ -31,7 +31,7 @@ trait TaskService {
   def createNewTask(name: TaskName, user: User): Either[ServiceError, Task] = {
     import crossroad0201.dddonscala.domain.task._
 
-    val createdTask = user createTask name
+    val createdTask = user.createTask(name)
     for {
       savedTask <- taskRepository.save(createdTask.entity) ifFailureThen asServiceError
       _         <- taskEventPublisher.publish(createdTask.event) ifFailureThen asServiceError
@@ -66,7 +66,7 @@ trait TaskService {
 
     for {
       task <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
-      commentedTask = user commentTo (task, message)
+      commentedTask = user.commentTo(task, message)
       savedTask <- taskRepository.save(commentedTask.entity) ifFailureThen asServiceError
       _         <- taskEventPublisher.publish(commentedTask.event) ifFailureThen asServiceError
     } yield savedTask
