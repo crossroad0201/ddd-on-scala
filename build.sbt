@@ -10,7 +10,7 @@ lazy val commonSettings = Seq(
   ),
   scalafmtOnCompile in ThisBuild := true,
   scalafmtTestOnCompile in ThisBuild := true,
-  libraryDependencies += scalaTest % Test
+  libraryDependencies ++= TestingDepends
 )
 
 lazy val dddOnScala = (project in file("."))
@@ -31,7 +31,8 @@ lazy val infrastructure = (project in file("modules/infrastructure"))
   .dependsOn(domain)
   .settings(
     commonSettings,
-    name := "dddonscala-infrastructure"
+    name := "dddonscala-infrastructure",
+    libraryDependencies ++= InfrastructureDepends
   )
 
 lazy val application = (project in file("modules/application"))

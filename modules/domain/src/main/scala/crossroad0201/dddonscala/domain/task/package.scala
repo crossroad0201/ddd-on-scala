@@ -20,10 +20,14 @@ package object task {
 
   // FIXME ステータスによって実行可否が異なる振る舞いは、この列挙型に聞くようにしたい
   @valueobject
-  sealed abstract class TaskState
+  sealed abstract class TaskState(val value: String)
   object TaskState {
-    case object Opened extends TaskState
-    case object Closed extends TaskState
+    case object Opened extends TaskState("OPENED")
+    case object Closed extends TaskState("CLOSED")
+    val values: Set[TaskState] = Set(Opened, Closed)
+
+    def valueOf(value: String): TaskState =
+      values.find(_.value == value).getOrElse { throw new IllegalArgumentException(s"$value は未定義の値です。") }
   }
 
   implicit def asAuthor(user: User): Author = Author(user)
