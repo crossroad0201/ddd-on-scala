@@ -45,6 +45,9 @@ class TaskServiceSpec extends FeatureSpec with GivenWhenThen with Matchers {
   trait WithFixture extends TaskService {
     override implicit val entityIdGenerator = UUIDEntityIdGenerator
 
+    override def tx[A](f:         (UnitOfWork) => A) = f(new UnitOfWork {})
+    override def txReadOnly[A](f: (UnitOfWork) => A) = f(new UnitOfWork {})
+
     override val taskRepository = new TaskRepository {
       val entities = mutable.Map[TaskId, Task]()
       override def get(id: task.TaskId)(implicit uof: UnitOfWork) = {

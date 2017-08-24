@@ -10,7 +10,7 @@ lazy val commonSettings = Seq(
   ),
   scalafmtOnCompile in ThisBuild := true,
   scalafmtTestOnCompile in ThisBuild := true,
-  libraryDependencies ++= TestingDepends
+  libraryDependencies ++= CommonDepends
 )
 
 lazy val dddOnScala = (project in file("."))

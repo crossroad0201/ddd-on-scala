@@ -4,7 +4,6 @@ import crossroad0201.dddonscala.domain.{repository, UnitOfWork}
 
 import scala.util.Try
 
-// FIXME サンプル実装を作る
 @repository
 trait TaskRepository {
 

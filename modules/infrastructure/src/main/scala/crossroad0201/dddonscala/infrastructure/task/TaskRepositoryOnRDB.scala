@@ -8,13 +8,13 @@ import scalikejdbc._
 
 import scala.util.Try
 
-class TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
+trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
 
   override def get(id: TaskId)(implicit uof: UnitOfWork) = Try {
     def getTask: Option[Task] = {
       sql"""
         |SELECT
-        |  id,
+        |  task_id,
         |  name,
         |  state,
         |  author_id,
@@ -22,10 +22,10 @@ class TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
         |FROM
         |  tasks
         |WHERE
-        |  id = ${id.value}
-      """.map { rs =>
+        |  task_id = ${id.value}
+      """.stripMargin.map { rs =>
         Task(
-          id         = TaskId(rs.string("id")),
+          id         = TaskId(rs.string("task_id")),
           name       = TaskName(rs.string("name")),
           state      = TaskState.valueOf(rs.string("state")),
           authorId   = UserId(rs.string("author_id")),
@@ -45,7 +45,7 @@ class TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
         |  task_id = ${id.value}
         |ORDER BY
         |  id
-      """.map { rs =>
+      """.stripMargin.map { rs =>
         Comment(
           message     = CommentMessage(rs.string("message")),
           commenterId = UserId(rs.string("commenter_id"))
