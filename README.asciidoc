@@ -4,7 +4,41 @@
 
 Now printing...
 
-== 参考サイト
+* TODO 概要
+* TODO プロジェクトの構成
+* TODO 概念モデル
+
+== セットアップ
+
+=== 前提
+
+* JDK 1.8 以上
+* http://www.scala-sbt.org/index.html[sbt]
+* https://www.docker.com[Docker]
+
+=== DBの準備
+
+* **Docker Compose** でDBサーバ（ https://mariadb.org[MariaDB] ）を起動します。
+====
+> $ cd ddd-on-scala +
+> $ docker-compose up -d
+====
+
+* **sbt** でDBにテーブルを作成します。
+====
+> $ sbt "project infrastructure" flywayMigrate
+====
+
+== ビルドと実行
+
+このサンプルはアプリケーションとしてのエンドポイントはありません。 +
+実行は **sbt** からユニットテストを実行して確認してください。
+
+====
+> $ sbt test
+====
+
+== 参考文献
 
 === Scala
 
@@ -12,13 +46,19 @@ Now printing...
 Scalaの入門テキスト。
 * http://www.ne.jp/asahi/hishidama/home/tech/scala/index.html[HishidamaさんのScalaリファレンス] +
 Scalaのよく使う言語機能やAPIのリファレンス。
-* http://twitter.github.io/effectivescala/index-ja.html[Effective Scala] +
-Scalaの標準的なコーディング規約。
+
+* http://www.scalatest.org/user_guide[ScalaTest] +
+Scalaの代表的なテスティングライブラリ。
+* http://scalikejdbc.org[ScalikeJDBC] +
+ScalaでRDBにアクセスするライブラリ。
 
 * https://tpolecat.github.io/2015/04/29/f-bounds.html[Returning the "Current" Type in Scala] +
 スーパータイプのメソッドの戻り値の型として、サブタイプを使用する方法の解説。
 
 === DDD（ドメイン駆動設計）
+
+* https://www.amazon.co.jp/dp/4798121967[書籍：エリック・エヴァンスのドメイン駆動設計]
+* https://www.amazon.co.jp/dp/479813161X[書籍：実践ドメイン駆動設計]
 
 * http://labs.gree.jp/blog/2013/12/9354/[Scalaコードでわかった気になるDDD] +
 Scalaを使ったDDDの解説。
