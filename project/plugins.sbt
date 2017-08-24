@@ -14,3 +14,8 @@ addSbtPlugin("com.lucidchart" % "sbt-scalafmt-coursier" % "1.10")
 // --- Scalaコンパイルエラーを見やすく
 // https://github.com/Duhemm/sbt-errors-summary
 addSbtPlugin("org.duhemm" % "sbt-errors-summary" % "0.6.0")
+
+// --- sbtからDBマイグレーションツール Flyway を実行できるようにする
+// https://flywaydb.org/documentation/sbt/
+resolvers += "Flyway" at "https://flywaydb.org/repo"
+addSbtPlugin("org.flywaydb" % "flyway-sbt" % "4.2.0")

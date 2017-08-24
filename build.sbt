@@ -32,7 +32,11 @@ lazy val infrastructure = (project in file("modules/infrastructure"))
   .settings(
     commonSettings,
     name := "dddonscala-infrastructure",
-    libraryDependencies ++= InfrastructureDepends
+    libraryDependencies ++= InfrastructureDepends,
+    // Flyway でデータベースをマイグレーションするための接続情報
+    flywayUrl := "jdbc:mariadb://localhost:3306/dddonscala",
+    flywayUser := "root",
+    flywayPassword := "dddonscala"
   )
 
 lazy val application = (project in file("modules/application"))
