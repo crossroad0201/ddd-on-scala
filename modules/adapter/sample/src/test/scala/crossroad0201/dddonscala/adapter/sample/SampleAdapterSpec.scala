@@ -14,9 +14,9 @@ import crossroad0201.dddonscala.domain.task.{
   TaskRepository,
   TaskState
 }
-import crossroad0201.dddonscala.domain.user.UserId
+import crossroad0201.dddonscala.domain.user.{User, UserId, UserRepository}
 import crossroad0201.dddonscala.infrastructure
-import crossroad0201.dddonscala.infrastructure.{EntityMetaDataCreatorImpl, EntityMetaDataImpl}
+import crossroad0201.dddonscala.infrastructure.EntityMetaDataImpl
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 
@@ -27,6 +27,17 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
   feature("タスクを新規作成できる") {
     scenario("タスク名と作成者を指定して、タスクを新規作成する") {
       new WithFixture {
+        Given("作成者が存在する")
+        (mockUserRepository
+          .get(_: UserId)(_: UnitOfWork))
+          .expects(UserId("USER001"), *)
+          .onCall { (aId, _) =>
+            Success(Some {
+              User(aId, EntityMetaDataImpl(1))
+            })
+          }
+          .once
+
         Then("タスクが保存される")
         (mockTaskRepository
           .save(_: Task)(_: UnitOfWork))
@@ -135,6 +146,7 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
   trait WithFixture {
     val mockTaskRepository     = mock[TaskRepository]
     val mockTaskEventPublisher = mock[TaskEventPublisher]
+    val mockUserRepository     = mock[UserRepository]
 
     val sut = new SampleAdapter {
       override val taskService = new TaskService with InfrastructureAware {
@@ -150,6 +162,7 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
 
         override val taskRepository     = mockTaskRepository
         override val taskEventPublisher = mockTaskEventPublisher
+        override val userRepository     = mockUserRepository
       }
     }
   }

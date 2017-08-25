@@ -3,7 +3,7 @@ package crossroad0201.dddonscala.application.task
 import crossroad0201.dddonscala.application._
 import crossroad0201.dddonscala.domain.{EntityIdGenerator, EntityMetaDataCreator}
 import crossroad0201.dddonscala.domain.task._
-import crossroad0201.dddonscala.domain.user.{User, UserId}
+import crossroad0201.dddonscala.domain.user.{UserId, UserRepository}
 
 import scala.language.postfixOps
 
@@ -13,6 +13,7 @@ trait TaskService extends TransactionAware {
 
   val taskRepository:     TaskRepository
   val taskEventPublisher: TaskEventPublisher
+  val userRepository:     UserRepository
 
   implicit val infraErrorHandler: Throwable => ServiceError
   private implicit val taskAlreadyClosedHandler: TaskAlreadyClosed => ServiceError = (e) =>
@@ -24,9 +25,9 @@ trait TaskService extends TransactionAware {
     tx { implicit uof =>
       import crossroad0201.dddonscala.domain.task._
 
-      val author      = User(authorId, null) // FIXME Userエンティティを再構築する
-      val createdTask = author.createTask(name)
       for {
+        author <- userRepository.get(authorId) ifNotExists NotFoundError("USER", authorId)
+        createdTask = author.createTask(name)
         savedTask <- taskRepository.save(createdTask.entity) ifFailureThen asServiceError
         _         <- taskEventPublisher.publish(createdTask.event) ifFailureThen asServiceError
       } yield savedTask
@@ -36,9 +37,9 @@ trait TaskService extends TransactionAware {
     tx { implicit uof =>
       import crossroad0201.dddonscala.domain.task._
 
-      val assignee = User(assigneeId, null) // FIXME Userエンティティを再構築する
       for {
         task         <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
+        assignee     <- userRepository.get(assigneeId) ifNotExists NotFoundError("USER", assigneeId)
         assignedTask <- assignee.assignTo(task) ifLeftThen asServiceError
         // FIXME 書き方はお好みで
         //assignedTask1 <- { user assignTo task } ifLeftThen asSserviceError
@@ -61,9 +62,9 @@ trait TaskService extends TransactionAware {
     tx { implicit uof =>
       import crossroad0201.dddonscala.domain.task._
 
-      val commenter = User(commenterId, null) // FIXME Userエンティティを再構築する
       for {
-        task <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
+        task      <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
+        commenter <- userRepository.get(commenterId) ifNotExists NotFoundError("USER", commenterId)
         commentedTask = commenter.commentTo(task, message)
         savedTask <- taskRepository.save(commentedTask.entity) ifFailureThen asServiceError
         _         <- taskEventPublisher.publish(commentedTask.event) ifFailureThen asServiceError

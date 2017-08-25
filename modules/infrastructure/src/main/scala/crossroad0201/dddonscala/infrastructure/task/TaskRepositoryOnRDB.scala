@@ -1,17 +1,15 @@
 package crossroad0201.dddonscala.infrastructure.task
 
-import crossroad0201.dddonscala.domain.{UnitOfWork, Value}
+import crossroad0201.dddonscala.domain.UnitOfWork
 import crossroad0201.dddonscala.domain.task._
-import crossroad0201.dddonscala.domain.user.UserId
-import crossroad0201.dddonscala.infrastructure
-import crossroad0201.dddonscala.infrastructure.EntityMetaDataImpl
-import crossroad0201.dddonscala.infrastructure.user._
+import crossroad0201.dddonscala.infrastructure._
 import crossroad0201.dddonscala.infrastructure.rdb.ScalikeJdbcAware
+import crossroad0201.dddonscala.infrastructure.user._
 import scalikejdbc._
 
 import scala.util.Try
-import crossroad0201.dddonscala.infrastructure._
 
+// FIXME インフラの実装はいらないんじゃないか？（逆にインフラがなくてもテストできるよ、とか）
 trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
 
   override def get(id: TaskId)(implicit uof: UnitOfWork) = Try {
