@@ -16,6 +16,7 @@ Now printing...
 * http://www.scala-sbt.org/index.html[sbt]
 * https://www.docker.com[Docker]
 
+
 === DBの準備
 
 * **Docker Compose** でDBサーバ（ https://mariadb.org[MariaDB] ）を起動します。
@@ -37,6 +38,23 @@ Now printing...
 ====
 > $ sbt test
 ====
+
+== 構成
+
+=== レイヤとモジュール
+
+レイヤ構成は **ヘキサゴナルアーキテクチャ** （および **オニオンアーキテクチャ** 、 **クリーンアーキテクチャ** ）を採用しています。
+
+各レイヤと対応するモジュールの構成は下表の通りです。
+
+[format="csv",options="header"]
+|====
+レイヤ,責務,依存するレイヤ,モジュール,ディレクトリ
+ドメイン,プロダクトが扱う業務領域（ドメイン）の知識を実装します。,-,domain,modules/domain
+アプリケーション,ドメインを使って、ユースケースを実現します。,ドメイン,application,modules/application
+インフラ,アプリケーションの実行結果を永続化します。,アプリケーション、ドメイン,infrastructure,modules/adapter/infrastructure
+コントローラ,外部（人やシステム）とのインターフェースを提供します。,インフラ、アプリケーション、ドメイン,sample,modules/adapter/controller/sample
+|====
 
 == 参考文献
 

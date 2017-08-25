@@ -14,7 +14,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val dddOnScala = (project in file("."))
-  .aggregate(domain, application, infrastructure, sampleAdapter)
+  .aggregate(domain, application, infrastructure, sampleController)
   .settings(
     commonSettings,
     name := "dddonscala",
@@ -33,7 +33,7 @@ lazy val application = (project in file("modules/application"))
     name := "dddonscala-application"
   )
 
-lazy val infrastructure = (project in file("modules/infrastructure"))
+lazy val infrastructure = (project in file("modules/adapter/infrastructure"))
   .dependsOn(application, domain)
   .settings(
     commonSettings,
@@ -45,7 +45,7 @@ lazy val infrastructure = (project in file("modules/infrastructure"))
     flywayPassword := "dddonscala"
   )
 
-lazy val sampleAdapter = (project in file("modules/adapter/sample"))
+lazy val sampleController = (project in file("modules/adapter/controller/sample"))
   .dependsOn(infrastructure, application, domain)
   .settings(
     commonSettings,

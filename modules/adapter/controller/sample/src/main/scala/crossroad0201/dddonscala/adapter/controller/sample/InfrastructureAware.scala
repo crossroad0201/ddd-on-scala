@@ -1,4 +1,4 @@
-package crossroad0201.dddonscala.adapter.sample
+package crossroad0201.dddonscala.adapter.controller.sample
 
 import crossroad0201.dddonscala.domain.EntityIdGenerator
 import crossroad0201.dddonscala.infrastructure
