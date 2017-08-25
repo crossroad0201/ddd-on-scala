@@ -6,14 +6,15 @@ import crossroad0201.dddonscala.domain.task.{TaskEvent, TaskEventPublisher, Task
 import crossroad0201.dddonscala.domain.user.{User, UserId}
 import crossroad0201.dddonscala.infrastructure.task.TaskRepositoryOnRDB
 import crossroad0201.dddonscala.infrastructure
-import crossroad0201.dddonscala.infrastructure.{TransactionAwareImpl, UUIDEntityIdGenerator}
+import crossroad0201.dddonscala.infrastructure.{EntityMetaDataCreatorImpl, TransactionAwareImpl, UUIDEntityIdGenerator}
 
 trait SampleAdapter {
   val taskService: TaskService
 
   def createTask(taskName: String, authorId: String): Option[String] = {
     (for {
-      createdTask <- taskService.createNewTask(TaskName(taskName), User(UserId(authorId)))
+      createdTask <- taskService
+        .createNewTask(TaskName(taskName), User(UserId(authorId), EntityMetaDataCreatorImpl.create))
     } yield createdTask) fold (
       error => {
         println(s"$error") // FIXME エラーコードからエラーメッセージを作る
@@ -44,12 +45,10 @@ trait SampleAdapter {
 }
 
 object SampleAdapterImpl extends SampleAdapter {
-  override val taskService = new TaskService with TransactionAwareImpl {
-    override implicit val entityIdGenerator = UUIDEntityIdGenerator
-    override val taskRepository             = new TaskRepository with TaskRepositoryOnRDB
+  override val taskService = new TaskService with InfrastructureAware {
+    override val taskRepository = new TaskRepository with TaskRepositoryOnRDB
     override val taskEventPublisher = new TaskEventPublisher {
       override def publish[EVENT <: TaskEvent](event: EVENT)(implicit uow: UnitOfWork) = ??? // FIXME
     }
-    override implicit val infraErrorHandler = infrastructure.infraErrorHandler
   }
 }

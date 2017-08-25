@@ -3,6 +3,7 @@ package crossroad0201.dddonscala.infrastructure.task
 import crossroad0201.dddonscala.domain.UnitOfWork
 import crossroad0201.dddonscala.domain.task._
 import crossroad0201.dddonscala.domain.user.UserId
+import crossroad0201.dddonscala.infrastructure.EntityMetaDataImpl
 import crossroad0201.dddonscala.infrastructure.rdb.ScalikeJdbcAware
 import scalikejdbc._
 
@@ -29,7 +30,8 @@ trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
           name       = TaskName(rs.string("name")),
           state      = TaskState.valueOf(rs.string("state")),
           authorId   = UserId(rs.string("author_id")),
-          assignment = rs.stringOpt("assignee_id").map(v => Assigned(UserId(v))).getOrElse(Assignment.notAssigned)
+          assignment = rs.stringOpt("assignee_id").map(v => Assigned(UserId(v))).getOrElse(Assignment.notAssigned),
+          metaData   = EntityMetaDataImpl(1) // FIXME 楽観ロック用バージョンをテーブルに追加
         )
       }.single.apply
     }

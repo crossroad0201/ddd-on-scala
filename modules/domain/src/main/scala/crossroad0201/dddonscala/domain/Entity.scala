@@ -1,9 +1,8 @@
 package crossroad0201.dddonscala.domain
 
 trait Entity[ID <: EntityId] {
-  val id: ID
-
-  // FIXME 楽観排他用のバージョンをどうする？
+  val id:       ID
+  val metaData: EntityMetaData
 
   override def equals(obj: Any): Boolean =
     obj match {
@@ -16,6 +15,11 @@ trait Entity[ID <: EntityId] {
 }
 
 trait EntityId extends Value[String]
+
+trait EntityMetaData
+trait EntityMetaDataCreator {
+  def create: EntityMetaData
+}
 
 trait EntityIdGenerator {
   def genId(): String

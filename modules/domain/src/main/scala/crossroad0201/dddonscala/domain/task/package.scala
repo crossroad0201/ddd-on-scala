@@ -28,11 +28,13 @@ package object task {
 
   implicit def asAuthor(user: User): Author = Author(user)
   case class Author(user: User) {
-    def createTask(name: TaskName)(implicit idGen: EntityIdGenerator): DomainResult[Task, TaskCreated] = {
+    def createTask(name:                            TaskName)(implicit idGen: EntityIdGenerator,
+                                   metaDataCreator: EntityMetaDataCreator): DomainResult[Task, TaskCreated] = {
       val task = Task(
         id       = TaskId.newId,
         name     = name,
-        authorId = user.id
+        authorId = user.id,
+        metaData = metaDataCreator.create
       )
       val event = TaskCreated(
         taskId   = task.id,

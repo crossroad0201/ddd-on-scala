@@ -16,6 +16,7 @@ import crossroad0201.dddonscala.domain.task.{
 }
 import crossroad0201.dddonscala.domain.user.UserId
 import crossroad0201.dddonscala.infrastructure
+import crossroad0201.dddonscala.infrastructure.{EntityMetaDataCreatorImpl, EntityMetaDataImpl}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 
@@ -84,7 +85,8 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
               Task(
                 id       = aId,
                 name     = TaskName("テストタスク"),
-                authorId = UserId("USER001")
+                authorId = UserId("USER001"),
+                metaData = EntityMetaDataImpl(1)
               )
             })
           }
@@ -135,7 +137,7 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
     val mockTaskEventPublisher = mock[TaskEventPublisher]
 
     val sut = new SampleAdapter {
-      override val taskService = new TaskService {
+      override val taskService = new TaskService with InfrastructureAware {
         override implicit val entityIdGenerator = new EntityIdGenerator {
           var currentId: Int = 0
           override def genId() = {
@@ -143,13 +145,11 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
             currentId.toString
           }
         }
-        override val taskRepository     = mockTaskRepository
-        override val taskEventPublisher = mockTaskEventPublisher
-
-        override implicit val infraErrorHandler = infrastructure.infraErrorHandler
-
         override def tx[A](f:         (UnitOfWork) => A) = f(new UnitOfWork {})
         override def txReadonly[A](f: (UnitOfWork) => A) = f(new UnitOfWork {})
+
+        override val taskRepository     = mockTaskRepository
+        override val taskEventPublisher = mockTaskEventPublisher
       }
     }
   }

@@ -1,16 +1,18 @@
 package crossroad0201.dddonscala.application.task
 
 import crossroad0201.dddonscala.application._
-import crossroad0201.dddonscala.domain.EntityIdGenerator
+import crossroad0201.dddonscala.domain.{EntityIdGenerator, EntityMetaDataCreator}
 import crossroad0201.dddonscala.domain.task._
 import crossroad0201.dddonscala.domain.user.User
 
 import scala.language.postfixOps
 
 trait TaskService extends TransactionAware {
-  implicit val entityIdGenerator: EntityIdGenerator
-  val taskRepository:             TaskRepository
-  val taskEventPublisher:         TaskEventPublisher
+  implicit val entityIdGenerator:     EntityIdGenerator
+  implicit val entityMetaDataCreator: EntityMetaDataCreator
+
+  val taskRepository:     TaskRepository
+  val taskEventPublisher: TaskEventPublisher
 
   // FIXME 実行ユーザーを implicit で
 
