@@ -15,6 +15,7 @@ import crossroad0201.dddonscala.domain.task.{
   TaskState
 }
 import crossroad0201.dddonscala.domain.user.UserId
+import crossroad0201.dddonscala.infrastructure
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 
@@ -144,6 +145,8 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
         }
         override val taskRepository     = mockTaskRepository
         override val taskEventPublisher = mockTaskEventPublisher
+
+        override implicit val infraErrorHandler = infrastructure.infraErrorHandler
 
         override def tx[A](f:         (UnitOfWork) => A) = f(new UnitOfWork {})
         override def txReadonly[A](f: (UnitOfWork) => A) = f(new UnitOfWork {})

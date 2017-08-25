@@ -38,12 +38,6 @@ package object application {
     }
   }
 
-  implicit val defaultThrowableHandler: Throwable => ServiceError = {
-    case e: OptimisticLockException => ConflictedError(e.id)
-    case e => SystemError(e)
-  }
-  case class OptimisticLockException(id: EntityId) extends RuntimeException(s"Optimistic lock error at $id.")
-
   def asServiceError[E](implicit f: E => ServiceError): E => ServiceError = f
 
 }

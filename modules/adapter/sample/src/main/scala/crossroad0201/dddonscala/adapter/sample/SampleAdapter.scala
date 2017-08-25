@@ -5,6 +5,7 @@ import crossroad0201.dddonscala.domain.UnitOfWork
 import crossroad0201.dddonscala.domain.task.{TaskEvent, TaskEventPublisher, TaskId, TaskName, TaskRepository}
 import crossroad0201.dddonscala.domain.user.{User, UserId}
 import crossroad0201.dddonscala.infrastructure.task.TaskRepositoryOnRDB
+import crossroad0201.dddonscala.infrastructure
 import crossroad0201.dddonscala.infrastructure.{TransactionAwareImpl, UUIDEntityIdGenerator}
 
 trait SampleAdapter {
@@ -49,5 +50,6 @@ object SampleAdapterImpl extends SampleAdapter {
     override val taskEventPublisher = new TaskEventPublisher {
       override def publish[EVENT <: TaskEvent](event: EVENT)(implicit uow: UnitOfWork) = ??? // FIXME
     }
+    override implicit val infraErrorHandler = infrastructure.infraErrorHandler
   }
 }

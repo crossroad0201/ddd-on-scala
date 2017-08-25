@@ -14,6 +14,7 @@ trait TaskService extends TransactionAware {
 
   // FIXME 実行ユーザーを implicit で
 
+  implicit val infraErrorHandler: Throwable => ServiceError
   private implicit val taskAlreadyClosedHandler: TaskAlreadyClosed => ServiceError = (e) =>
     IllegalTaskOperationError(e.task)
   private implicit val taskAlreadyOpenedHandler: TaskAlreadyOpened => ServiceError = (e) =>
