@@ -1,6 +1,7 @@
 package crossroad0201.dddonscala.application.task
 
 import crossroad0201.dddonscala.application._
+import ServiceErrorCodes._
 import crossroad0201.dddonscala.domain.EntityIdGenerator
 import crossroad0201.dddonscala.domain.task.{
   CommentMessage,
@@ -99,4 +100,4 @@ trait TaskService extends TransactionAware {
 }
 
 case class IllegalTaskOperationError(task: Task)
-    extends ApplicationError("error.invalidTaskOperation", task.id, task.state)
+    extends ApplicationError(ServiceErrorCodes.InvalidTaskOperation, task.id, task.state)

@@ -18,6 +18,7 @@ package object application {
     }
   }
 
+  // FIXME インフラ層も、Try より　Either[Throwable, _] のほうがいいのでは？
   implicit class InfraErrorOps[S](infraResult: Try[S]) {
     def ifFailureThen(f: Throwable => ServiceError): Either[ServiceError, S] = {
       infraResult match {
@@ -40,7 +41,7 @@ package object application {
   def asServiceError[E](implicit f: E => ServiceError): E => ServiceError = f
 
   implicit val defaultThrowableHandler: Throwable => ServiceError = {
-    case e: OptimisticLockException => ConflictError(e)
+    case e: OptimisticLockException => ConflictedError(e)
     case e => SystemError(e)
   }
 

@@ -16,7 +16,7 @@ trait SampleAdapter {
       createdTask <- taskService.createNewTask(TaskName(taskName), User(UserId("USER001")))
     } yield createdTask) fold (
       error => {
-        println(s"$error")
+        println(s"$error") // FIXME エラーコードからエラーメッセージを作る
         None
       },
       task => {

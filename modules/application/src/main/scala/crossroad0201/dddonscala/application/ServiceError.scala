@@ -15,13 +15,25 @@ abstract sealed class ServiceError(val errorCode: ErrorCode, val args: Any*) {
   }
 }
 
-case class SystemError(cause: Throwable) extends ServiceError("error.system")
+case class SystemError(cause: Throwable) extends ServiceError(ServiceErrorCodes.SystemError)
 
 abstract class ApplicationError(errorCode: ErrorCode, args: Any*) extends ServiceError(errorCode, args: _*)
 
-case class NotFoundError(entityType: String, id: EntityId) extends ApplicationError("error.notFound", entityType, id)
+case class NotFoundError(entityType: String, id: EntityId)
+    extends ApplicationError(ServiceErrorCodes.NotFound, entityType, id)
 
-case class ConflictError(cause: OptimisticLockException) extends ApplicationError("error.conflict", cause.id)
+case class ConflictedError(cause: OptimisticLockException)
+    extends ApplicationError(ServiceErrorCodes.Conflicted, cause.id)
+
+object ServiceErrorCodes {
+  val SystemError = "error.system"
+  val NotFound    = "error.notFound"
+  val Conflicted  = "error.conflicted"
+
+  // in TaskService
+  val InvalidTaskOperation = "error.invalidTaskOperation"
+
+}
 
 // FIXME エラー処理まわり
 case class OptimisticLockException(id: EntityId) extends RuntimeException(s"Optimistic lock error at $id.")

@@ -1,6 +1,6 @@
 package crossroad0201.dddonscala
 
-import scala.annotation.StaticAnnotation
+import scala.annotation.Annotation
 
 package object domain {
 
@@ -9,13 +9,13 @@ package object domain {
    * 説明用のアノテーションです。
    * 実際はこのようなアノテーションは作りません。
    */
-  class entity extends StaticAnnotation
-  class valueobject extends StaticAnnotation
-  class factory extends StaticAnnotation
-  class repository extends StaticAnnotation
-  class domainservice extends StaticAnnotation // FIXME ドメインサービスの例がない
-  class domainevent extends StaticAnnotation
-  class eventpublisher extends StaticAnnotation
+  class entity extends Annotation
+  class valueobject extends Annotation
+  class factory extends Annotation
+  class repository extends Annotation
+  class domainservice extends Annotation // FIXME ドメインサービスの例がない
+  class domainevent extends Annotation
+  class eventpublisher extends Annotation
 
   // FIXME AnyVal を継承する？？
   // FIXME インフラ層でプリミティブ値とimplicit wrap/unwrapする
