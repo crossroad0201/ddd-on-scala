@@ -1,19 +1,18 @@
 package crossroad0201.dddonscala.adapter.sample
 
-import crossroad0201.dddonscala.UUIDEntityIdGenerator
 import crossroad0201.dddonscala.application.task.TaskService
 import crossroad0201.dddonscala.domain.UnitOfWork
 import crossroad0201.dddonscala.domain.task.{TaskEvent, TaskEventPublisher, TaskId, TaskName, TaskRepository}
 import crossroad0201.dddonscala.domain.user.{User, UserId}
-import crossroad0201.dddonscala.infrastructure.TransactionAwareImpl
 import crossroad0201.dddonscala.infrastructure.task.TaskRepositoryOnRDB
+import crossroad0201.dddonscala.infrastructure.{TransactionAwareImpl, UUIDEntityIdGenerator}
 
 trait SampleAdapter {
   val taskService: TaskService
 
-  def createTask(taskName: String): Option[String] = {
+  def createTask(taskName: String, authorId: String): Option[String] = {
     (for {
-      createdTask <- taskService.createNewTask(TaskName(taskName), User(UserId("USER001")))
+      createdTask <- taskService.createNewTask(TaskName(taskName), User(UserId(authorId)))
     } yield createdTask) fold (
       error => {
         println(s"$error") // FIXME エラーコードからエラーメッセージを作る

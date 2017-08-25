@@ -1,6 +1,6 @@
 package crossroad0201.dddonscala
 
-import crossroad0201.dddonscala.domain.DomainError
+import crossroad0201.dddonscala.domain.{DomainError, EntityId}
 
 import scala.util.{Failure, Success, Try}
 
@@ -29,20 +29,21 @@ package object application {
   }
 
   implicit class TryOptionOps[T](maybeValue: Try[Option[T]]) {
-    def ifNotExists(f: => ServiceError): Either[ServiceError, T] = {
+    def ifNotExists(f: => ServiceError)(): Either[ServiceError, T] = {
       maybeValue match {
         case Success(Some(s)) => Right(s)
         case Success(None)    => Left(f)
-        case Failure(e)       => Left(defaultThrowableHandler(e))
+        case Failure(e)       => Left(SystemError(e))
       }
     }
   }
 
-  def asServiceError[E](implicit f: E => ServiceError): E => ServiceError = f
-
   implicit val defaultThrowableHandler: Throwable => ServiceError = {
-    case e: OptimisticLockException => ConflictedError(e)
+    case e: OptimisticLockException => ConflictedError(e.id)
     case e => SystemError(e)
   }
+  case class OptimisticLockException(id: EntityId) extends RuntimeException(s"Optimistic lock error at $id.")
+
+  def asServiceError[E](implicit f: E => ServiceError): E => ServiceError = f
 
 }

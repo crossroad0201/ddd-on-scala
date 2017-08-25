@@ -1,17 +1,16 @@
 package crossroad0201.dddonscala.domain.task
 
 import crossroad0201.dddonscala.domain.task.TaskState.{Closed, Opened}
-import crossroad0201.dddonscala.domain.{entity, DomainResult, Entity}
 import crossroad0201.dddonscala.domain.user.{User, UserId}
+import crossroad0201.dddonscala.domain.{DomainResult, Entity}
 
-@entity
 case class Task(
     id:         TaskId,
     name:       TaskName,
     state:      TaskState = TaskState.Opened,
     authorId:   UserId,
     assignment: Assignment = Assignment.notAssigned,
-    comments:   Comments = Comments.Nothing
+    comments:   Comments = Comments.nothing
 ) extends Entity[TaskId] {
 
   def assign(assignee: User): Either[TaskAlreadyClosed, DomainResult[Task, TaskAssigned]] = {

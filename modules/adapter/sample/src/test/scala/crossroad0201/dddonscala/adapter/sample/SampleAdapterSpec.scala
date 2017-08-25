@@ -3,13 +3,16 @@ package crossroad0201.dddonscala.adapter.sample
 import crossroad0201.dddonscala.application.task.TaskService
 import crossroad0201.dddonscala.domain.{EntityIdGenerator, UnitOfWork}
 import crossroad0201.dddonscala.domain.task.{
+  Assignment,
+  Comments,
   Task,
   TaskClosed,
   TaskCreated,
   TaskEventPublisher,
   TaskId,
   TaskName,
-  TaskRepository
+  TaskRepository,
+  TaskState
 }
 import crossroad0201.dddonscala.domain.user.UserId
 import org.scalamock.scalatest.MockFactory
@@ -27,6 +30,14 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
           .save(_: Task)(_: UnitOfWork))
           .expects(where {
             case (aTask, _) =>
+              aTask should have(
+                'id (TaskId("1")),
+                'name (TaskName("テストタスク")),
+                'state (TaskState.Opened),
+                'authorId (UserId("USER001")),
+                'assignment (Assignment.notAssigned),
+                'comments (Comments.nothing)
+              )
               true
           })
           .onCall { (aTask, _) =>
@@ -39,6 +50,11 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
           .publish(_: TaskCreated)(_: UnitOfWork))
           .expects(where {
             case (aEvent, _) =>
+              aEvent should have(
+                'taskId (TaskId("1")),
+                'name (TaskName("テストタスク")),
+                'authorId (UserId("USER001"))
+              )
               true
           })
           .onCall { (aEvent, _) =>
@@ -47,7 +63,7 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
           .once
 
         When("タスクを作成する")
-        val actual = sut.createTask("テストタスク")
+        val actual = sut.createTask("テストタスク", "USER001")
 
         Then("作成されたタスクのIDが返される")
         actual should contain("1")
@@ -73,11 +89,15 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
           }
           .once
 
-        Then("タスクが保存される")
+        Then("タスクの状態がクローズに更新される")
         (mockTaskRepository
           .save(_: Task)(_: UnitOfWork))
           .expects(where {
             case (aTask, _) =>
+              aTask should have(
+                'id (TaskId("123")),
+                'state (TaskState.Closed)
+              )
               true
           })
           .onCall { (aTask, _) =>
@@ -90,6 +110,9 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
           .publish(_: TaskClosed)(_: UnitOfWork))
           .expects(where {
             case (aEvent, _) =>
+              aEvent should have(
+                'taskId (TaskId("123"))
+              )
               true
           })
           .onCall { (aEvent, _) =>

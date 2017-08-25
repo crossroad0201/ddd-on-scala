@@ -50,7 +50,7 @@ trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
           message     = CommentMessage(rs.string("message")),
           commenterId = UserId(rs.string("commenter_id"))
         )
-      }.list.apply.foldLeft(Comments.Nothing) { (comments, comment) =>
+      }.list.apply.foldLeft(Comments.nothing) { (comments, comment) =>
         comments.add(comment)
       }
     }
