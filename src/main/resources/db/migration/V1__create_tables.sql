@@ -4,6 +4,7 @@ CREATE TABLE tasks (
   state VARCHAR(20) NOT NULL,
   author_id VARCHAR(50) NOT NULL,
   assignee_id VARCHAR(50),
+  version INT NOT NULL,
   PRIMARY KEY (task_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

@@ -19,7 +19,8 @@ trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
         |  name,
         |  state,
         |  author_id,
-        |  assignee_id
+        |  assignee_id,
+        |  version
         |FROM
         |  tasks
         |WHERE
@@ -31,7 +32,7 @@ trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
           state      = TaskState.valueOf(rs.string("state")),
           authorId   = UserId(rs.string("author_id")),
           assignment = rs.stringOpt("assignee_id").map(v => Assigned(UserId(v))).getOrElse(Assignment.notAssigned),
-          metaData   = EntityMetaDataImpl(1) // FIXME 楽観ロック用バージョンをテーブルに追加
+          metaData   = EntityMetaDataImpl(rs.int("version"))
         )
       }.single.apply
     }
