@@ -16,6 +16,8 @@ import crossroad0201.dddonscala.domain.task.{
 }
 import crossroad0201.dddonscala.domain.user.{User, UserId, UserRepository}
 import crossroad0201.dddonscala.infrastructure
+import crossroad0201.dddonscala.infrastructure.task._
+import crossroad0201.dddonscala.infrastructure.user._
 import crossroad0201.dddonscala.infrastructure.EntityMetaDataImpl
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
@@ -33,7 +35,7 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
           .expects(UserId("USER001"), *)
           .onCall { (aId, _) =>
             Success(Some {
-              User(aId, EntityMetaDataImpl(1))
+              User(aId, "テストユーザー１", EntityMetaDataImpl(1))
             })
           }
           .once
@@ -95,8 +97,8 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
             Success(Some {
               Task(
                 id       = aId,
-                name     = TaskName("テストタスク"),
-                authorId = UserId("USER001"),
+                name     = "テストタスク",
+                authorId = "USER001",
                 metaData = EntityMetaDataImpl(1)
               )
             })

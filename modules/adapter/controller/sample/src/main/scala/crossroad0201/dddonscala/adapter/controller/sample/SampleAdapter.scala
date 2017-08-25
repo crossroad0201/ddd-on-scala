@@ -16,11 +16,11 @@ trait SampleAdapter {
       createdTask <- taskService.createNewTask(taskName, authorId)
     } yield createdTask) fold (
       error => {
-        println(s"$error") // FIXME エラーコードからエラーメッセージを作る
+        println(s"$error") // TODO エラーコードからエラーメッセージを作る
         None
       },
       task => {
-        println(s"タスク ${task.name} が作成されました。 ID = ${task.id.value}") // FIXME VOをプリミティブ値にimplicit展開
+        println(s"タスク ${task.name} が作成されました。 ID = ${task.id.value}")
         Some(task.id.value)
       }
     )

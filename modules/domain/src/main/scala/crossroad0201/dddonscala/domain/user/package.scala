@@ -7,4 +7,6 @@ package object user {
     def newId(implicit idGen: EntityIdGenerator): UserId = UserId(idGen.genId())
   }
 
+  case class UserName(value: String) extends Value[String]
+
 }
