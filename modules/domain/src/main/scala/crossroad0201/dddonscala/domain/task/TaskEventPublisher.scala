@@ -1,6 +1,6 @@
 package crossroad0201.dddonscala.domain.task
 
-import crossroad0201.dddonscala.domain.eventpublisher
+import crossroad0201.dddonscala.domain.{eventpublisher, UnitOfWork}
 
 import scala.util.Try
 
@@ -8,6 +8,6 @@ import scala.util.Try
 @eventpublisher
 trait TaskEventPublisher {
 
-  def publish[EVENT <: TaskEvent](event: EVENT): Try[EVENT]
+  def publish[EVENT <: TaskEvent](event: EVENT)(implicit uow: UnitOfWork): Try[EVENT]
 
 }

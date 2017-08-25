@@ -1,7 +1,6 @@
 package crossroad0201.dddonscala
 
 import crossroad0201.dddonscala.domain.DomainError
-import crossroad0201.dddonscala.infrastructure.rdb.OptimisticLockException
 
 import scala.util.{Failure, Success, Try}
 

@@ -1,12 +1,13 @@
 package crossroad0201.dddonscala.infrastructure
 
+import crossroad0201.dddonscala.application.TransactionAware
 import crossroad0201.dddonscala.domain.UnitOfWork
 import crossroad0201.dddonscala.infrastructure.rdb.ScalikeJdbcSessionHolder
 import scalikejdbc._
 
 import scala.util.Failure
 
-trait TransactionAware {
+trait TransactionAwareImpl extends TransactionAware {
 
   def tx[A](f: UnitOfWork => A): A = {
     // FIXME リファクタリングしたい
@@ -42,7 +43,7 @@ trait TransactionAware {
     }
   }
 
-  def txReadOnly[A](f: UnitOfWork => A): A = {
+  def txReadonly[A](f: UnitOfWork => A): A = {
     using(DB(ConnectionPool.borrow())) { db =>
       db readOnly { dbs =>
         val uow = new UnitOfWork with ScalikeJdbcSessionHolder {

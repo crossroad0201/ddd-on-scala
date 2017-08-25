@@ -1,7 +1,6 @@
 package crossroad0201.dddonscala.application
 
 import crossroad0201.dddonscala.domain.EntityId
-import crossroad0201.dddonscala.infrastructure.rdb.OptimisticLockException
 
 abstract sealed class ServiceError(val errorCode: ErrorCode, val args: Any*) {
   protected val stackTrace = {
@@ -22,5 +21,7 @@ abstract class ApplicationError(errorCode: ErrorCode, args: Any*) extends Servic
 
 case class NotFoundError(entityType: String, id: EntityId) extends ApplicationError("error.notFound", entityType, id)
 
-case class ConflictError(cause: OptimisticLockException)
-    extends ApplicationError("error.conflict", cause.id, cause.version)
+case class ConflictError(cause: OptimisticLockException) extends ApplicationError("error.conflict", cause.id)
+
+// FIXME エラー処理まわり
+case class OptimisticLockException(id: EntityId) extends RuntimeException(s"Optimistic lock error at $id.")

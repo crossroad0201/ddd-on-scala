@@ -1,5 +1,6 @@
-package crossroad0201.dddonscala.application
+package crossroad0201.dddonscala.application.task
 
+import crossroad0201.dddonscala.application._
 import crossroad0201.dddonscala.domain.EntityIdGenerator
 import crossroad0201.dddonscala.domain.task.{
   CommentMessage,
@@ -12,7 +13,6 @@ import crossroad0201.dddonscala.domain.task.{
   TaskRepository
 }
 import crossroad0201.dddonscala.domain.user.User
-import crossroad0201.dddonscala.infrastructure.TransactionAware
 
 import scala.language.postfixOps
 

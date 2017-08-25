@@ -9,6 +9,6 @@ trait TaskRepository {
 
   def get(id: TaskId)(implicit uof: UnitOfWork): Try[Option[Task]]
 
-  def save[T <: Task](task: T)(implicit uof: UnitOfWork): Try[T]
+  def save(task: Task)(implicit uof: UnitOfWork): Try[Task]
 
 }
