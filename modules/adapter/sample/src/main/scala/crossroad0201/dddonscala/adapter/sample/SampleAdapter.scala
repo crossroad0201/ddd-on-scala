@@ -2,19 +2,17 @@ package crossroad0201.dddonscala.adapter.sample
 
 import crossroad0201.dddonscala.application.task.TaskService
 import crossroad0201.dddonscala.domain.UnitOfWork
-import crossroad0201.dddonscala.domain.task.{TaskEvent, TaskEventPublisher, TaskId, TaskName, TaskRepository}
-import crossroad0201.dddonscala.domain.user.{User, UserId}
-import crossroad0201.dddonscala.infrastructure.task.TaskRepositoryOnRDB
-import crossroad0201.dddonscala.infrastructure
-import crossroad0201.dddonscala.infrastructure.{EntityMetaDataCreatorImpl, TransactionAwareImpl, UUIDEntityIdGenerator}
+import crossroad0201.dddonscala.domain.task.{TaskEvent, TaskEventPublisher, TaskRepository}
+import crossroad0201.dddonscala.infrastructure._
+import crossroad0201.dddonscala.infrastructure.task.{TaskRepositoryOnRDB, _}
+import crossroad0201.dddonscala.infrastructure.user._
 
 trait SampleAdapter {
   val taskService: TaskService
 
   def createTask(taskName: String, authorId: String): Option[String] = {
     (for {
-      createdTask <- taskService
-        .createNewTask(TaskName(taskName), User(UserId(authorId), EntityMetaDataCreatorImpl.create))
+      createdTask <- taskService.createNewTask(taskName, authorId)
     } yield createdTask) fold (
       error => {
         println(s"$error") // FIXME エラーコードからエラーメッセージを作る
@@ -29,7 +27,7 @@ trait SampleAdapter {
 
   def closeTask(taskId: String): Option[String] = {
     (for {
-      closedTask <- taskService.closeTask(TaskId(taskId))
+      closedTask <- taskService.closeTask(taskId)
     } yield closedTask) fold (
       error => {
         println(s"$error")

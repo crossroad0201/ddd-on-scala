@@ -3,7 +3,7 @@ package crossroad0201.dddonscala.application.task
 import crossroad0201.dddonscala.application._
 import crossroad0201.dddonscala.domain.{EntityIdGenerator, EntityMetaDataCreator}
 import crossroad0201.dddonscala.domain.task._
-import crossroad0201.dddonscala.domain.user.User
+import crossroad0201.dddonscala.domain.user.{User, UserId}
 
 import scala.language.postfixOps
 
@@ -14,18 +14,17 @@ trait TaskService extends TransactionAware {
   val taskRepository:     TaskRepository
   val taskEventPublisher: TaskEventPublisher
 
-  // FIXME 実行ユーザーを implicit で
-
   implicit val infraErrorHandler: Throwable => ServiceError
   private implicit val taskAlreadyClosedHandler: TaskAlreadyClosed => ServiceError = (e) =>
     IllegalTaskOperationError(e.task)
   private implicit val taskAlreadyOpenedHandler: TaskAlreadyOpened => ServiceError = (e) =>
     IllegalTaskOperationError(e.task)
 
-  def createNewTask(name: TaskName, author: User): Either[ServiceError, Task] =
+  def createNewTask(name: TaskName, authorId: UserId): Either[ServiceError, Task] =
     tx { implicit uof =>
       import crossroad0201.dddonscala.domain.task._
 
+      val author      = User(authorId, null) // FIXME Userエンティティを再構築する
       val createdTask = author.createTask(name)
       for {
         savedTask <- taskRepository.save(createdTask.entity) ifFailureThen asServiceError
@@ -33,10 +32,11 @@ trait TaskService extends TransactionAware {
       } yield savedTask
     }
 
-  def assignToTask(taskId: TaskId, assignee: User): Either[ServiceError, Task] =
+  def assignToTask(taskId: TaskId, assigneeId: UserId): Either[ServiceError, Task] =
     tx { implicit uof =>
       import crossroad0201.dddonscala.domain.task._
 
+      val assignee = User(assigneeId, null) // FIXME Userエンティティを再構築する
       for {
         task         <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
         assignedTask <- assignee.assignTo(task) ifLeftThen asServiceError
@@ -57,10 +57,11 @@ trait TaskService extends TransactionAware {
     } yield savedTask
   }
 
-  def commentToTask(taskId: TaskId, commenter: User, message: CommentMessage): Either[ServiceError, Task] =
+  def commentToTask(taskId: TaskId, commenterId: UserId, message: CommentMessage): Either[ServiceError, Task] =
     tx { implicit uof =>
       import crossroad0201.dddonscala.domain.task._
 
+      val commenter = User(commenterId, null) // FIXME Userエンティティを再構築する
       for {
         task <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
         commentedTask = commenter.commentTo(task, message)

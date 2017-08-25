@@ -1,13 +1,16 @@
 package crossroad0201.dddonscala.infrastructure.task
 
-import crossroad0201.dddonscala.domain.UnitOfWork
+import crossroad0201.dddonscala.domain.{UnitOfWork, Value}
 import crossroad0201.dddonscala.domain.task._
 import crossroad0201.dddonscala.domain.user.UserId
+import crossroad0201.dddonscala.infrastructure
 import crossroad0201.dddonscala.infrastructure.EntityMetaDataImpl
+import crossroad0201.dddonscala.infrastructure.user._
 import crossroad0201.dddonscala.infrastructure.rdb.ScalikeJdbcAware
 import scalikejdbc._
 
 import scala.util.Try
+import crossroad0201.dddonscala.infrastructure._
 
 trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
 
@@ -27,12 +30,12 @@ trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
         |  task_id = ${id.value}
       """.stripMargin.map { rs =>
         Task(
-          id         = TaskId(rs.string("task_id")),
-          name       = TaskName(rs.string("name")),
-          state      = TaskState.valueOf(rs.string("state")),
-          authorId   = UserId(rs.string("author_id")),
-          assignment = rs.stringOpt("assignee_id").map(v => Assigned(UserId(v))).getOrElse(Assignment.notAssigned),
-          metaData   = EntityMetaDataImpl(rs.int("version"))
+          id         = rs.string("task_id"),
+          name       = rs.string("name"),
+          state      = rs.string("state"),
+          authorId   = rs.string("author_id"),
+          assignment = rs.stringOpt("assignee_id"),
+          metaData   = rs.int("version")
         )
       }.single.apply
     }
@@ -50,8 +53,8 @@ trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
         |  id
       """.stripMargin.map { rs =>
         Comment(
-          message     = CommentMessage(rs.string("message")),
-          commenterId = UserId(rs.string("commenter_id"))
+          message     = rs.string("message"),
+          commenterId = rs.string("commenter_id")
         )
       }.list.apply.foldLeft(Comments.nothing) { (comments, comment) =>
         comments.add(comment)
