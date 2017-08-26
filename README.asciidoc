@@ -49,6 +49,10 @@ image:doc/Layer.png[]
 
 image:doc/Components.png[]
 
+=== 概念モデル
+
+image:doc/DomainModel.png[]
+
 == 参考文献
 
 === Scala
