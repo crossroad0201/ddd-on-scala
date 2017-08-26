@@ -15,7 +15,6 @@ package object task {
 
   case class CommentMessage(value: String) extends AnyVal with Value[String]
 
-  // FIXME ステータスによって実行可否が異なる振る舞いは、この列挙型に聞くようにしたい
   sealed abstract class TaskState(val value: String)
   object TaskState {
     case object Opened extends TaskState("OPENED")

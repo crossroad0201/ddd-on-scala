@@ -14,7 +14,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val dddOnScala = (project in file("."))
-  .aggregate(domain, application, infrastructure, rdb, kafka, elasticSearch, sampleController)
+  .aggregate(domain, application, infrastructure, rdb, kafka, elasticSearch, sampleInterface)
   .settings(
     commonSettings,
     name := "dddonscala",
@@ -71,9 +71,9 @@ lazy val elasticSearch = (project in file("modules/adapter/infrastructure/elasti
     name := "dddonscala-elasticsearch"
   )
 
-lazy val sampleController = (project in file("modules/adapter/controller/sample"))
+lazy val sampleInterface = (project in file("modules/adapter/interface/sample"))
   .dependsOn(rdb, kafka, elasticSearch, infrastructure, application, query, domain)
   .settings(
     commonSettings,
-    name := "dddonscala-sampleadapter"
+    name := "dddonscala-sampleinterface"
   )

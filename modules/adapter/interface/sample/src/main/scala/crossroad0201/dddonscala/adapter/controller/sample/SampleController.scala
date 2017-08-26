@@ -14,7 +14,7 @@ trait SampleController {
       createdTask <- taskService.createNewTask(taskName, authorId)
     } yield createdTask) fold (
       error => {
-        println(s"$error") // TODO エラーコードからエラーメッセージを作る
+        println(s"$error")
         None
       },
       task => {
