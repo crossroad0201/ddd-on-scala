@@ -27,7 +27,7 @@ Now printing...
 
 * **sbt** でDBにテーブルを作成します。
 ====
-> $ sbt "project infrastructure" flywayMigrate
+> $ sbt "project rdb" flywayMigrate
 ====
 
 == ビルドと実行
