@@ -5,6 +5,7 @@ import crossroad0201.dddonscala.domain.user.{UserEvent, UserEventPublisher}
 
 trait UserEventPublisherOnKafka extends UserEventPublisher {
 
-  override def publish[EVENT <: UserEvent](event: EVENT)(implicit uow: UnitOfWork) = ??? // FIXME
+  override def publish[EVENT <: UserEvent](event: EVENT)(implicit uow: UnitOfWork) =
+    throw new UnsupportedOperationException("このサンプルでは未実装です。")
 
 }

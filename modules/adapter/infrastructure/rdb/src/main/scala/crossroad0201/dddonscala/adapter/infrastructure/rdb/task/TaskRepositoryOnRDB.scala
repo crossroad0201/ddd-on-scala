@@ -10,7 +10,6 @@ import scalikejdbc._
 
 import scala.util.Try
 
-// FIXME インフラの実装はいらないんじゃないか？（逆にインフラがなくてもテストできるよ、とか）
 trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
 
   override def get(id: TaskId)(implicit uof: UnitOfWork) = Try {
@@ -65,8 +64,8 @@ trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
     } yield maybeTask.copy(comments = getComments)
   }
 
-  override def save(task: Task)(implicit uof: UnitOfWork) = ??? // FIXME
+  override def save(task: Task)(implicit uof: UnitOfWork) = throw new UnsupportedOperationException("このサンプルでは未実装です。")
 
-  override def delete(task: Task)(implicit uof: UnitOfWork) = ??? // FIXME
+  override def delete(task: Task)(implicit uof: UnitOfWork) = throw new UnsupportedOperationException("このサンプルでは未実装です。")
 
 }

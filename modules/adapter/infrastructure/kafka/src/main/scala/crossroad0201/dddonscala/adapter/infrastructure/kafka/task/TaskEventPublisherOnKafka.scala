@@ -5,6 +5,7 @@ import crossroad0201.dddonscala.domain.task.{TaskEvent, TaskEventPublisher}
 
 trait TaskEventPublisherOnKafka extends TaskEventPublisher {
 
-  override def publish[EVENT <: TaskEvent](event: EVENT)(implicit uow: UnitOfWork) = ??? // FIXME
+  override def publish[EVENT <: TaskEvent](event: EVENT)(implicit uow: UnitOfWork) =
+    throw new UnsupportedOperationException("このサンプルでは未実装です。")
 
 }
