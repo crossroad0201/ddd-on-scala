@@ -14,7 +14,7 @@ trait Entity[ID <: EntityId] {
 
 }
 
-trait EntityId extends Value[String]
+trait EntityId extends Any with Value[String]
 
 trait EntityMetaData
 trait EntityMetaDataCreator {

@@ -46,10 +46,10 @@ class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers 
           .expects(where {
             case (aTask, _) =>
               aTask should have(
-                'id (TaskId("1")),
-                'name (TaskName("テストタスク")),
+                'id ("1"),
+                'name ("テストタスク"),
                 'state (TaskState.Opened),
-                'authorId (UserId("USER001")),
+                'authorId ("USER001"),
                 'assignment (Assignment.notAssigned),
                 'comments (Comments.nothing)
               )
@@ -66,9 +66,9 @@ class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers 
           .expects(where {
             case (aEvent, _) =>
               aEvent should have(
-                'taskId (TaskId("1")),
-                'name (TaskName("テストタスク")),
-                'authorId (UserId("USER001"))
+                'taskId ("1"),
+                'name ("テストタスク"),
+                'authorId ("USER001")
               )
               true
           })
@@ -111,7 +111,7 @@ class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers 
           .expects(where {
             case (aTask, _) =>
               aTask should have(
-                'id (TaskId("123")),
+                'id ("123"),
                 'state (TaskState.Closed)
               )
               true
@@ -127,7 +127,7 @@ class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers 
           .expects(where {
             case (aEvent, _) =>
               aEvent should have(
-                'taskId (TaskId("123"))
+                'taskId ("123")
               )
               true
           })

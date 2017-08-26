@@ -45,10 +45,10 @@ class TaskRepositoryOnRDBSpec
           actual should be('success)
           actual.get should not be empty
           actual.get.get should have(
-            'id (TaskId("TESTTASK002")),
-            'name (TaskName("テストタスク２")),
+            'id ("TESTTASK002"),
+            'name ("テストタスク２"),
             'state (TaskState.Closed),
-            'authorId (UserId("USER001")),
+            'authorId ("USER001"),
             'assignment (Assigned(UserId("USER002")))
           )
         }

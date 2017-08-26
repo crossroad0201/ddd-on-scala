@@ -5,15 +5,15 @@ import crossroad0201.dddonscala.domain.user.User
 package object task {
   import scala.language.implicitConversions
 
-  case class TaskId(value: String) extends EntityId
+  case class TaskId(value: String) extends AnyVal with EntityId
   object TaskId {
     def newId(implicit idGen: EntityIdGenerator): TaskId =
       TaskId(idGen.genId())
   }
 
-  case class TaskName(value: String) extends Value[String]
+  case class TaskName(value: String) extends AnyVal with Value[String]
 
-  case class CommentMessage(value: String) extends Value[String]
+  case class CommentMessage(value: String) extends AnyVal with Value[String]
 
   // FIXME ステータスによって実行可否が異なる振る舞いは、この列挙型に聞くようにしたい
   sealed abstract class TaskState(val value: String)
