@@ -1,8 +1,8 @@
 package crossroad0201.dddonscala.adapter.controller.sample
 
+import crossroad0201.dddonscala.adapter.infrastructure.rdb.{OptimisticLockException, ScalikeJdbcSessionHolder}
 import crossroad0201.dddonscala.application.{ConflictedError, ServiceError, SystemError, TransactionAware}
 import crossroad0201.dddonscala.domain.{EntityIdGenerator, EntityMetaDataCreator, UnitOfWork}
-import crossroad0201.dddonscala.infrastructure.rdb.{OptimisticLockException, ScalikeJdbcSessionHolder}
 import crossroad0201.dddonscala.infrastructure.{EntityMetaDataCreatorImpl, UUIDEntityIdGenerator}
 import scalikejdbc._
 

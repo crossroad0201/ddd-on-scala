@@ -1,9 +1,10 @@
 package crossroad0201.dddonscala.infrastructure.task
 
+import crossroad0201.dddonscala.adapter.infrastructure.rdb.ScalikeJdbcSessionHolder
+import crossroad0201.dddonscala.adapter.infrastructure.rdb.task.TaskRepositoryOnRDB
 import crossroad0201.dddonscala.domain.UnitOfWork
 import crossroad0201.dddonscala.domain.task._
 import crossroad0201.dddonscala.domain.user.UserId
-import crossroad0201.dddonscala.infrastructure.rdb.ScalikeJdbcSessionHolder
 import org.scalatest.{BeforeAndAfterAll, GivenWhenThen, Matchers}
 import org.scalatest.fixture.WordSpec
 import scalikejdbc.scalatest.AutoRollback

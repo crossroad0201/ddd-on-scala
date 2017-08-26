@@ -1,14 +1,12 @@
 package crossroad0201.dddonscala
 
-import java.util.UUID
-
-import crossroad0201.dddonscala.application.{ConflictedError, ServiceError, SystemError}
-import crossroad0201.dddonscala.domain.{EntityIdGenerator, EntityMetaData, Value}
-import crossroad0201.dddonscala.infrastructure.rdb.OptimisticLockException
+import crossroad0201.dddonscala.domain.{EntityMetaData, Value}
 
 import scala.language.implicitConversions
 
 package object infrastructure {
+
+  type Version = Int
 
   /*
    * プリミティブな値 を ドメインの値型 に自動的に変換する implicit関数 です。

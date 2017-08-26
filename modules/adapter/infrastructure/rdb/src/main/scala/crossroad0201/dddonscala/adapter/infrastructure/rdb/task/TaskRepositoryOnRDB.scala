@@ -1,9 +1,10 @@
-package crossroad0201.dddonscala.infrastructure.task
+package crossroad0201.dddonscala.adapter.infrastructure.rdb.task
 
+import crossroad0201.dddonscala.adapter.infrastructure.rdb.ScalikeJdbcAware
 import crossroad0201.dddonscala.domain.UnitOfWork
 import crossroad0201.dddonscala.domain.task._
 import crossroad0201.dddonscala.infrastructure._
-import crossroad0201.dddonscala.infrastructure.rdb.ScalikeJdbcAware
+import crossroad0201.dddonscala.infrastructure.task._
 import crossroad0201.dddonscala.infrastructure.user._
 import scalikejdbc._
 

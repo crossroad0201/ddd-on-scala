@@ -1,10 +1,11 @@
 package crossroad0201.dddonscala.adapter.controller.sample
 
+import crossroad0201.dddonscala.adapter.infrastructure.rdb.task.TaskRepositoryOnRDB
 import crossroad0201.dddonscala.application.task.TaskService
 import crossroad0201.dddonscala.domain.task.{TaskEvent, TaskEventPublisher, TaskRepository}
 import crossroad0201.dddonscala.domain.user.UserRepository
 import crossroad0201.dddonscala.domain.{user, UnitOfWork}
-import crossroad0201.dddonscala.infrastructure.task.{TaskRepositoryOnRDB, _}
+import crossroad0201.dddonscala.infrastructure.task._
 import crossroad0201.dddonscala.infrastructure.user._
 
 trait SampleController {

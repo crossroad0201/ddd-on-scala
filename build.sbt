@@ -14,7 +14,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val dddOnScala = (project in file("."))
-  .aggregate(domain, application, infrastructure, sampleController)
+  .aggregate(domain, application, infrastructure, rdb, sampleController)
   .settings(
     commonSettings,
     name := "dddonscala",
@@ -37,7 +37,14 @@ lazy val infrastructure = (project in file("modules/adapter/infrastructure"))
   .dependsOn(application, domain)
   .settings(
     commonSettings,
-    name := "dddonscala-infrastructure",
+    name := "dddonscala-infrastructure"
+  )
+
+lazy val rdb = (project in file("modules/adapter/infrastructure/rdb"))
+  .dependsOn(infrastructure, application, domain)
+  .settings(
+    commonSettings,
+    name := "dddonscala-rdb",
     libraryDependencies ++= InfrastructureDepends,
     // Flyway でデータベースをマイグレーションするための接続情報
     flywayUrl := "jdbc:mariadb://localhost:3306/dddonscala",
@@ -46,7 +53,7 @@ lazy val infrastructure = (project in file("modules/adapter/infrastructure"))
   )
 
 lazy val sampleController = (project in file("modules/adapter/controller/sample"))
-  .dependsOn(infrastructure, application, domain)
+  .dependsOn(rdb, infrastructure, application, domain)
   .settings(
     commonSettings,
     name := "dddonscala-sampleadapter"

@@ -1,4 +1,4 @@
-package crossroad0201.dddonscala.infrastructure.rdb
+package crossroad0201.dddonscala.adapter.infrastructure.rdb
 
 import crossroad0201.dddonscala.domain.UnitOfWork
 import scalikejdbc.DBSession
