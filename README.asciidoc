@@ -53,7 +53,8 @@ Now printing...
 ドメイン,プロダクトが扱う業務領域（ドメイン）の知識を実装します。,-,domain,modules/domain
 アプリケーション,ドメインを使って、ユースケースを実現します。,ドメイン,application,modules/application
 インフラ,アプリケーションの実行結果を永続化します。,アプリケーション、ドメイン,infrastructure,modules/adapter/infrastructure
-コントローラ,外部（人やシステム）とのインターフェースを提供します。,インフラ、アプリケーション、ドメイン,sample,modules/adapter/controller/sample
+RDB,RDBへの永続化を行います。,インフラ、アプリケーション、ドメイン,rdb,modules/adapter/infrastructure.rdb
+コントローラ,外部（人やシステム）とのインターフェースを提供します。,RDB、インフラ、アプリケーション、ドメイン,sample,modules/adapter/controller/sample
 |====
 
 == 参考文献
