@@ -22,15 +22,4 @@ package object infrastructure {
 
   implicit def wrapEntityMetaData(version: Int): EntityMetaData = EntityMetaDataImpl(version)
 
-  /*
-   * インフラレイヤで発生する例外を、サービスレイヤのエラーに変換します。
-   */
-  val infraErrorHandler: Throwable => ServiceError = {
-    case e: OptimisticLockException => ConflictedError(e.id)
-    case e => SystemError(e)
-  }
-
-  object UUIDEntityIdGenerator extends EntityIdGenerator {
-    override def genId() = UUID.randomUUID().toString
-  }
 }

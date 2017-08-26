@@ -1,7 +1,6 @@
 package crossroad0201.dddonscala.adapter.controller.sample
 
 import crossroad0201.dddonscala.application.task.TaskService
-import crossroad0201.dddonscala.domain.{EntityIdGenerator, UnitOfWork}
 import crossroad0201.dddonscala.domain.task.{
   Assignment,
   Comments,
@@ -15,16 +14,16 @@ import crossroad0201.dddonscala.domain.task.{
   TaskState
 }
 import crossroad0201.dddonscala.domain.user.{User, UserId, UserRepository}
-import crossroad0201.dddonscala.infrastructure
+import crossroad0201.dddonscala.domain.{EntityIdGenerator, UnitOfWork}
+import crossroad0201.dddonscala.infrastructure.EntityMetaDataImpl
 import crossroad0201.dddonscala.infrastructure.task._
 import crossroad0201.dddonscala.infrastructure.user._
-import crossroad0201.dddonscala.infrastructure.EntityMetaDataImpl
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 
 import scala.util.Success
 
-class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers with MockFactory {
+class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers with MockFactory {
 
   feature("タスクを新規作成できる") {
     scenario("タスク名と作成者を指定して、タスクを新規作成する") {
@@ -150,7 +149,7 @@ class SampleAdapterSpec extends FeatureSpec with GivenWhenThen with Matchers wit
     val mockTaskEventPublisher = mock[TaskEventPublisher]
     val mockUserRepository     = mock[UserRepository]
 
-    val sut = new SampleAdapter {
+    val sut = new SampleController {
       override val taskService = new TaskService with InfrastructureAware {
         override implicit val entityIdGenerator = new EntityIdGenerator {
           var currentId: Int = 0

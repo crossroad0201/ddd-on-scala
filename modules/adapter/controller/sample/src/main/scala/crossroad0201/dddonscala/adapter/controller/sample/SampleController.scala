@@ -1,14 +1,13 @@
 package crossroad0201.dddonscala.adapter.controller.sample
 
 import crossroad0201.dddonscala.application.task.TaskService
-import crossroad0201.dddonscala.domain.{user, UnitOfWork}
 import crossroad0201.dddonscala.domain.task.{TaskEvent, TaskEventPublisher, TaskRepository}
 import crossroad0201.dddonscala.domain.user.UserRepository
-import crossroad0201.dddonscala.infrastructure._
+import crossroad0201.dddonscala.domain.{user, UnitOfWork}
 import crossroad0201.dddonscala.infrastructure.task.{TaskRepositoryOnRDB, _}
 import crossroad0201.dddonscala.infrastructure.user._
 
-trait SampleAdapter {
+trait SampleController {
   val taskService: TaskService
 
   def createTask(taskName: String, authorId: String): Option[String] = {
@@ -43,7 +42,7 @@ trait SampleAdapter {
 
 }
 
-object SampleAdapterImpl extends SampleAdapter {
+object SampleControllerImpl extends SampleController {
   override val taskService = new TaskService with InfrastructureAware {
     override val taskRepository = new TaskRepository with TaskRepositoryOnRDB
     override val taskEventPublisher = new TaskEventPublisher {
