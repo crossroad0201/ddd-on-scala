@@ -7,5 +7,11 @@ trait UserEvent extends DomainEvent {
 }
 
 case class UserCreated(
-    userId: UserId
+    userId:   UserId,
+    userName: UserName
+) extends UserEvent
+
+case class UserModified(
+    userId:   UserId,
+    userName: UserName
 ) extends UserEvent

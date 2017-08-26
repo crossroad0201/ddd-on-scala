@@ -17,7 +17,8 @@ object User {
       metaData = metaDataCreator.create
     )
     val event = UserCreated(
-      userId = user.id
+      userId   = user.id,
+      userName = user.name
     )
     DomainResult(user, event)
   }

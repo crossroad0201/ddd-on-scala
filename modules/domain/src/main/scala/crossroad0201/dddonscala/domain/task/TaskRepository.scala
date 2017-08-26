@@ -11,4 +11,6 @@ trait TaskRepository {
 
   def save(task: Task)(implicit uof: UnitOfWork): Try[Task]
 
+  def delete(task: Task)(implicit uof: UnitOfWork): Try[Task]
+
 }

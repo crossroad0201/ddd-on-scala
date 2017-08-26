@@ -18,6 +18,7 @@ import crossroad0201.dddonscala.domain.{EntityIdGenerator, UnitOfWork}
 import crossroad0201.dddonscala.infrastructure.EntityMetaDataImpl
 import crossroad0201.dddonscala.infrastructure.task._
 import crossroad0201.dddonscala.infrastructure.user._
+import crossroad0201.dddonscala.query.taskview.{TaskSearchResult, TaskView, TaskViewQueryProcessor}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 
@@ -144,10 +145,61 @@ class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers 
     }
   }
 
+  feature("タスクを検索できる") {
+    scenario("タスク名や作成者名で検索する") {
+      new WithFixture {
+        (mockTaskViewQueryProcessor
+          .searchTasks(_: String))
+          .expects("DDD")
+          .returning {
+            Success {
+              TaskSearchResult(
+                hits = 3,
+                items = Seq(
+                  TaskView(
+                    taskId       = "1",
+                    taskName     = "DDDをScalaで実践する",
+                    taskState    = "CLOSED",
+                    authorName   = "テストユーザー１",
+                    assigneeName = Some("テストユーザー１"),
+                    commentSize  = 3
+                  ),
+                  TaskView(
+                    taskId       = "3",
+                    taskName     = "サンプルプログラムを実装する",
+                    taskState    = "CLOSED",
+                    authorName   = "DDD好きのユーザー",
+                    assigneeName = Some("テストユーザー２"),
+                    commentSize  = 10
+                  ),
+                  TaskView(
+                    taskId       = "5",
+                    taskName     = "READMEにDDDの解説を書く",
+                    taskState    = "OPENED",
+                    authorName   = "テストユーザー２",
+                    assigneeName = Some("テストユーザー１"),
+                    commentSize  = 1
+                  )
+                )
+              )
+            }
+          }
+          .once
+
+        When("タスクをキーワードで検索する")
+        val actual = sut.searchTask("DDD")
+
+        Then("ヒットしたタスクのIDのリストが返される")
+        actual should contain only ("1", "3", "5")
+      }
+    }
+  }
+
   trait WithFixture {
-    val mockTaskRepository     = mock[TaskRepository]
-    val mockTaskEventPublisher = mock[TaskEventPublisher]
-    val mockUserRepository     = mock[UserRepository]
+    val mockTaskRepository         = mock[TaskRepository]
+    val mockTaskEventPublisher     = mock[TaskEventPublisher]
+    val mockUserRepository         = mock[UserRepository]
+    val mockTaskViewQueryProcessor = mock[TaskViewQueryProcessor]
 
     val sut = new SampleController {
       override val taskService = new TaskService with InfrastructureAware {
@@ -165,6 +217,8 @@ class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers 
         override val taskEventPublisher = mockTaskEventPublisher
         override val userRepository     = mockUserRepository
       }
+
+      override val taskViewQueryProcessor = mockTaskViewQueryProcessor
     }
   }
 }

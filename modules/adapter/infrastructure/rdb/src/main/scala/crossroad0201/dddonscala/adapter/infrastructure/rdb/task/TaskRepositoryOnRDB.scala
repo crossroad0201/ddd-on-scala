@@ -65,6 +65,8 @@ trait TaskRepositoryOnRDB extends TaskRepository with ScalikeJdbcAware {
     } yield maybeTask.copy(comments = getComments)
   }
 
-  // FIXME TaskRepo#save を実装する
-  override def save(task: Task)(implicit uof: UnitOfWork) = ???
+  override def save(task: Task)(implicit uof: UnitOfWork) = ??? // FIXME
+
+  override def delete(task: Task)(implicit uof: UnitOfWork) = ??? // FIXME
+
 }

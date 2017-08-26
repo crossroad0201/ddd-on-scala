@@ -14,7 +14,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val dddOnScala = (project in file("."))
-  .aggregate(domain, application, infrastructure, rdb, sampleController)
+  .aggregate(domain, application, infrastructure, rdb, kafka, elasticSearch, sampleController)
   .settings(
     commonSettings,
     name := "dddonscala",
@@ -24,6 +24,11 @@ lazy val dddOnScala = (project in file("."))
 lazy val domain = (project in file("modules/domain")).settings(
   commonSettings,
   name := "dddonscala-domain"
+)
+
+lazy val query = (project in file("modules/query")).settings(
+  commonSettings,
+  name := "dddonscala-query"
 )
 
 lazy val application = (project in file("modules/application"))
@@ -52,8 +57,22 @@ lazy val rdb = (project in file("modules/adapter/infrastructure/rdb"))
     flywayPassword := "dddonscala"
   )
 
+lazy val kafka = (project in file("modules/adapter/infrastructure/kafka"))
+  .dependsOn(infrastructure, application, domain)
+  .settings(
+    commonSettings,
+    name := "dddonscala-kafka"
+  )
+
+lazy val elasticSearch = (project in file("modules/adapter/infrastructure/elasticSearch"))
+  .dependsOn(infrastructure, query)
+  .settings(
+    commonSettings,
+    name := "dddonscala-elasticsearch"
+  )
+
 lazy val sampleController = (project in file("modules/adapter/controller/sample"))
-  .dependsOn(rdb, infrastructure, application, domain)
+  .dependsOn(rdb, kafka, elasticSearch, infrastructure, application, query, domain)
   .settings(
     commonSettings,
     name := "dddonscala-sampleadapter"
