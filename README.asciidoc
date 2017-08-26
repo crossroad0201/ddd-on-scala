@@ -41,7 +41,13 @@ Now printing...
 
 == 構成
 
-Now printing...
+=== レイヤ・モジュール構成
+
+image:doc/Layer.png[]
+
+=== コンポーネント構成
+
+image:doc/Components.png[]
 
 == 参考文献
 

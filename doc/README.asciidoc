@@ -1,0 +1,2 @@
+
+* `*.xml` ファイルは https://www.draw.io[draw.io] で作成した図形データです。
