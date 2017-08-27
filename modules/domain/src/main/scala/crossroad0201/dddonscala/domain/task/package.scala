@@ -38,15 +38,28 @@ package object task {
   }
 
   /*
-   * NOTE: 他の集約との関連は、その「ロール」をモデルとして定義し、そのロール型にドメインの振る舞いを定義します。
+   * NOTE: 他の集約との関連は、その関連端の「ロール」をモデルとして定義し、そのロール型にドメインの振る舞いを定義します。
    * （ここでは、「作成者」「担当者」「コメント記入者」と言うロールをモデル化しています）
    *
    * こうすることで、関連先のエンティティに変更を加えることなく、自集約での振る舞いを自然な形で定義できます。
    */
+
   // NOTE: ロール型は implicit class とすることで、エンティティを暗黙的にロール型に変換できます。
 
   implicit class Author(user: User) {
-    // NOTE: 「他の集約から生み出されるエンティティ」を生成するファクトリは、ロール型を定義します。
+    /*
+     * NOTE: 「他の集約から生み出されるエンティティ」を生成するファクトリは、ロール型に定義します。
+     * こうすることで、アプリケーションサービスをより自然に実装できます。
+     *
+     * ロール型をファクトリにしない場合
+     *   val author: User = ???
+     *   val createdTask = Task.create(author, "TaskName")  // タスク生成時に作成者を渡す
+     *
+     * ロール型をファクトリにする場合
+     *   import crossroad0201.dddonscala.domain.task._
+     *   val author: User = ???
+     *   val createdTask = author.createTask("TaskName")  // 作成者がタスクを生成する
+     */
     def createTask(name:                            TaskName)(implicit idGen: EntityIdGenerator,
                                    metaDataCreator: EntityMetaDataCreator): DomainResult[Task, TaskCreated] = {
       val task = Task(
