@@ -71,8 +71,8 @@ trait TaskService extends TransactionAware {
         assignee     <- userRepository.get(assigneeId) ifNotExists NotFoundError("USER", assigneeId)
         assignedTask <- assignee.assignTo(task) ifLeftThen asServiceError
         // FIXME 書き方はお好みで
-        //assignedTask1 <- { user assignTo task } ifLeftThen asSserviceError
-        //assignedTask2 <- (user assignTo task) ifLeftThen asServiceError
+        // _         <- { assignee assignTo task } ifLeftThen asServiceError
+        // _         <- (assignee assignTo task) ifLeftThen asServiceError
         savedTask <- taskRepository.save(assignedTask.entity) ifFailureThen asServiceError
         _         <- taskEventPublisher.publish(assignedTask.event) ifFailureThen asServiceError
       } yield savedTask
