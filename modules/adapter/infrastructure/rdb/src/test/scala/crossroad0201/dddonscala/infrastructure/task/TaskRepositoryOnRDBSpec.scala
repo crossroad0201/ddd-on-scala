@@ -5,16 +5,19 @@ import crossroad0201.dddonscala.adapter.infrastructure.rdb.task.TaskRepositoryOn
 import crossroad0201.dddonscala.domain.UnitOfWork
 import crossroad0201.dddonscala.domain.task._
 import crossroad0201.dddonscala.domain.user.UserId
-import org.scalatest.{BeforeAndAfterAll, GivenWhenThen, Matchers}
+import org.scalatest.{BeforeAndAfterAll, GivenWhenThen, Inside, Matchers}
 import org.scalatest.fixture.WordSpec
 import scalikejdbc.scalatest.AutoRollback
 import scalikejdbc._
 import scalikejdbc.config.DBs
 
+import scala.util.{Failure, Success}
+
 class TaskRepositoryOnRDBSpec
     extends WordSpec
     with GivenWhenThen
     with Matchers
+    with Inside
     with BeforeAndAfterAll
     with AutoRollback {
 
@@ -42,15 +45,14 @@ class TaskRepositoryOnRDBSpec
           println(s"Actual: $actual")
 
           When("タスクが返される")
-          actual should be('success)
-          actual.get should not be empty
-          actual.get.get should have(
-            'id ("TESTTASK002"),
-            'name ("テストタスク２"),
-            'state (TaskState.Closed),
-            'authorId ("USER001"),
-            'assignment (Assigned(UserId("USER002")))
-          )
+          inside(actual) {
+            case (Success(Some(aTask))) =>
+              aTask.id should be(TaskId("TESTTASK002"))
+              aTask.name should be(TaskName("テストタスク２"))
+              aTask.state should be(TaskState.Closed)
+              aTask.authorId should be(UserId("USER001"))
+              aTask.assignment should be(Assigned(UserId("USER002")))
+          }
         }
       }
     }

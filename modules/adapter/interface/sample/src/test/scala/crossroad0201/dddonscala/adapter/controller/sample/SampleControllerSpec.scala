@@ -45,14 +45,12 @@ class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers 
           .save(_: Task)(_: UnitOfWork))
           .expects(where {
             case (aTask, _) =>
-              aTask should have(
-                'id ("1"),
-                'name ("テストタスク"),
-                'state (TaskState.Opened),
-                'authorId ("USER001"),
-                'assignment (Assignment.notAssigned),
-                'comments (Comments.nothing)
-              )
+              aTask.id should be(TaskId("1"))
+              aTask.name should be(TaskName("テストタスク"))
+              aTask.state should be(TaskState.Opened)
+              aTask.authorId should be(UserId("USER001"))
+              aTask.assignment should be(Assignment.notAssigned)
+              aTask.comments should be(Comments.nothing)
               true
           })
           .onCall { (aTask, _) =>
@@ -65,11 +63,9 @@ class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers 
           .publish(_: TaskCreated)(_: UnitOfWork))
           .expects(where {
             case (aEvent, _) =>
-              aEvent should have(
-                'taskId ("1"),
-                'name ("テストタスク"),
-                'authorId ("USER001")
-              )
+              aEvent.taskId should be(TaskId("1"))
+              aEvent.name should be(TaskName("テストタスク"))
+              aEvent.authorId should be(UserId("USER001"))
               true
           })
           .onCall { (aEvent, _) =>
@@ -110,10 +106,8 @@ class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers 
           .save(_: Task)(_: UnitOfWork))
           .expects(where {
             case (aTask, _) =>
-              aTask should have(
-                'id ("123"),
-                'state (TaskState.Closed)
-              )
+              aTask.id should be(TaskId("123"))
+              aTask.state should be(TaskState.Closed)
               true
           })
           .onCall { (aTask, _) =>
@@ -126,9 +120,7 @@ class SampleControllerSpec extends FeatureSpec with GivenWhenThen with Matchers 
           .publish(_: TaskClosed)(_: UnitOfWork))
           .expects(where {
             case (aEvent, _) =>
-              aEvent should have(
-                'taskId ("123")
-              )
+              aEvent.taskId should be(TaskId("123"))
               true
           })
           .onCall { (aEvent, _) =>
