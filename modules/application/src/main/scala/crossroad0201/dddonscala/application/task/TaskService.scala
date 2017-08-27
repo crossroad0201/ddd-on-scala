@@ -1,9 +1,9 @@
 package crossroad0201.dddonscala.application.task
 
 import crossroad0201.dddonscala.application._
-import crossroad0201.dddonscala.domain.{EntityIdGenerator, EntityMetaDataCreator}
 import crossroad0201.dddonscala.domain.task._
 import crossroad0201.dddonscala.domain.user.{UserId, UserRepository}
+import crossroad0201.dddonscala.domain.{EntityIdGenerator, EntityMetaDataCreator}
 
 import scala.language.postfixOps
 
@@ -51,12 +51,13 @@ trait TaskService extends TransactionAware {
   def createNewTask(name: TaskName, authorId: UserId): Either[ServiceError, Task] =
     tx { implicit uow =>
       // NOTE: 他集約のエンティティを、自集約のロール型に変換するために、パッケージをimportします。
-      import crossroad0201.dddonscala.domain.task._
+      import crossroad0201.dddonscala.domain.task.{TaskService => TaskDomainService, _}
 
       for {
         author <- userRepository.get(authorId) ifNotExists NotFoundError("USER", authorId)
-        createdTask = author.createTask(name)
-        savedTask <- taskRepository.save(createdTask.entity) ifFailureThen asServiceError
+        createdTask  = author.createTask(name)
+        exampledTask = TaskDomainService.example(createdTask.entity)
+        savedTask <- taskRepository.save(exampledTask) ifFailureThen asServiceError
         _         <- taskEventPublisher.publish(createdTask.event) ifFailureThen asServiceError
       } yield savedTask
     }

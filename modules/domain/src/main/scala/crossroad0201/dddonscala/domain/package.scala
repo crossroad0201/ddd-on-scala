@@ -1,7 +1,5 @@
 package crossroad0201.dddonscala
 
-// FIXME ドメインサービスの例がない
-
 package object domain {
 
   // NOTE: AnyValにミックスインできるように、Anyを継承します
