@@ -2,6 +2,8 @@
 
 = DDD on Scala
 
+== はじめに
+
 https://www.scala-lang.org[Scala] による https://www.amazon.co.jp/dp/4798121967[DDD（ドメイン駆動設計）] の実装サンプルです。
 
 Scalaの関数型言語の特徴を活かして、 *イミュータブル* で *副作用のない（副作用を局所化した）* DDDの実装を目指しています。
@@ -47,7 +49,7 @@ https://github.com/crossroad0201/ddd-on-scala/search?utf8=%E2%9C%93&q=NOTE%3A&ty
 このサンプルでは、 http://jeffreypalermo.com/blog/the-onion-architecture-part-1/[オニオンアーキテクチャ] をもとにした
 レイヤ・モジュール構成を採用しています。
 
-image:doc/Layer.png[]
+image:doc/Layer.png[レイヤ構成図]
 
 [format="csv",options=["header"]]
 |===
@@ -75,13 +77,14 @@ image:doc/Layer.png[]
 
 このサンプルのコンポーネント構成は下図の通りです。
 
-image:doc/Components.png[]
+image:doc/Components.png[コンポーネント図]
 
 === 概念モデル
 
-このサンプルで扱う対象のドメインは下図の通りです。
+このサンプルのドメインでは、シンプルなタスク管理を扱います。 +
+ドメインの概念モデルは下図の通りです。
 
-image:doc/DomainModel.png[]
+image:doc/DomainModel.png[概念モデル図]
 
 == 参考文献
 
