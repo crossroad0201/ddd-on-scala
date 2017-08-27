@@ -4,6 +4,10 @@ import crossroad0201.dddonscala.domain.task.TaskState.{Closed, Opened}
 import crossroad0201.dddonscala.domain.user.{User, UserId}
 import crossroad0201.dddonscala.domain.{DomainResult, Entity, EntityMetaData}
 
+/*
+ * NOTE: エンティティは、他の集約のエンティティを保持せず、そのエンティティIDだけを保持するようにします。
+ */
+
 case class Task(
     id:         TaskId,
     name:       TaskName,
@@ -13,6 +17,9 @@ case class Task(
     comments:   Comments = Comments.nothing,
     metaData:   EntityMetaData
 ) extends Entity[TaskId] {
+
+  // NOTE: エンティティのメソッドは、処理結果を反映したエンティティと、ドメインイベントを返します。
+  // NOTE: ケースクラスの copy() はエンティティやバリューオブジェクト内でのみ使用し、外からは使用しないようにします。
 
   def assign(assignee: User): Either[TaskAlreadyClosed, DomainResult[Task, TaskAssigned]] = {
     state match {
@@ -86,7 +93,9 @@ case class Task(
 }
 object Task {
   /*
-   * ケースクラスでは、コンパニオンオブジェクトにすべてのプロパティに展開する unapply メソッドが
+   * NOTE: エンティティの状態でパターンマッチできるようにする unapply() メソッドを定義します。
+   *
+   * ケースクラスでは、コンパニオンオブジェクトにすべてのプロパティに展開する unapply() メソッドが
    * 自動生成されるため、独自に unapply メソッドを定義することができないので、
    * このようなインナーオブジェクトを定義して unapply メソッドを定義しています。
    *

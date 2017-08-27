@@ -9,6 +9,7 @@ case class User(
 ) extends Entity[UserId]
 
 object User {
+  // NOTE: 「単独で生み出されるエンティティ」を生成するファクトリは、コンパニオンオブジェクトのメソッドとして定義します。
   def create(name:                            UserName)(implicit idGen: EntityIdGenerator,
                              metaDataCreator: EntityMetaDataCreator): DomainResult[User, UserCreated] = {
     val user = User(

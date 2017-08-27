@@ -4,6 +4,7 @@ package crossroad0201.dddonscala
 
 package object domain {
 
+  // NOTE: AnyValにミックスインできるように、Anyを継承します
   trait Value[T] extends Any {
     def value: T
   }

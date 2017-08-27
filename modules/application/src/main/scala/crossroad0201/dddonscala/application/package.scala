@@ -9,6 +9,8 @@ package object application {
 
   type ErrorCode = String
 
+  // NOTE: アプリケーションサービスで、ドメインレイヤ／インフラレイヤ で発生するエラーを変換するための構文サポートです。
+
   implicit class DomainErrorOps[E <: DomainError, R](domainResult: Either[E, R]) {
     def ifLeftThen(f: E => ServiceError): Either[ServiceError, R] = {
       domainResult match {

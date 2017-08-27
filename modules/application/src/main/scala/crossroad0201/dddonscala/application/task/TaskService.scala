@@ -8,6 +8,12 @@ import crossroad0201.dddonscala.domain.user.{UserId, UserRepository}
 import scala.language.postfixOps
 
 trait TaskService extends TransactionAware {
+
+  /*
+   * NOTE: アプリケーションサービスは特定のインフラに依存しません。
+   * インターフェースレイヤで、アプリケーションサービスにインフラを依存性注入します。
+   */
+
   implicit val entityIdGenerator:     EntityIdGenerator
   implicit val entityMetaDataCreator: EntityMetaDataCreator
 
@@ -15,14 +21,36 @@ trait TaskService extends TransactionAware {
   val taskEventPublisher: TaskEventPublisher
   val userRepository:     UserRepository
 
+  /*
+   * NOTE: ドメインレイヤ／インフラレイヤで発生するエラーを、ユースケースのエラーに変換します。
+   */
+
   implicit val infraErrorHandler: Throwable => ServiceError
   private implicit val taskAlreadyClosedHandler: TaskAlreadyClosed => ServiceError = (e) =>
     IllegalTaskOperationError(e.task)
   private implicit val taskAlreadyOpenedHandler: TaskAlreadyOpened => ServiceError = (e) =>
     IllegalTaskOperationError(e.task)
 
+  /*
+   * NOTE: アプリケーションサービスのメソッドの実装は、基本的に以下の処理ステップを for内方式 で包んだ形になります。
+   *
+   * 1. リポジトリを使って、処理対象のエンティティを取得する。
+   * 2. エンティティのメソッド、およびドメインサービスを呼び出して、ユースケースの処理を行う。
+   * 3. リポジトリを使って、処理したエンティティを永続化する。
+   * 4. イベントパブリッシャーを使って、発生したドメインイベントを通知する。
+   */
+
+  /*
+   * NOTE: アプリケーションサービスのメソッドの実装は、ユースケース記述のようになります。
+   * ロジックを書くのではなく、ユースケース記述のように書くことで、コードが仕様を自己説明できるようになります。
+   *
+   * また、ドメインモデルのインターフェース（メソッド名など）は、アプリケーションサービスを
+   * 自然な表現で記述できるように設計し、必要であれば implicit conversion などのScalaの言語機能を活用します。
+   */
+
   def createNewTask(name: TaskName, authorId: UserId): Either[ServiceError, Task] =
-    tx { implicit uof =>
+    tx { implicit uow =>
+      // NOTE: 他集約のエンティティを、自集約のロール型に変換するために、パッケージをimportします。
       import crossroad0201.dddonscala.domain.task._
 
       for {
@@ -34,7 +62,7 @@ trait TaskService extends TransactionAware {
     }
 
   def assignToTask(taskId: TaskId, assigneeId: UserId): Either[ServiceError, Task] =
-    tx { implicit uof =>
+    tx { implicit uow =>
       import crossroad0201.dddonscala.domain.task._
 
       for {
@@ -49,17 +77,18 @@ trait TaskService extends TransactionAware {
       } yield savedTask
     }
 
-  def unAssignFromTask(taskId: TaskId): Either[ServiceError, Task] = tx { implicit uof =>
-    for {
-      task           <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
-      unAssignedTask <- task.unAssign ifLeftThen asServiceError
-      savedTask      <- taskRepository.save(unAssignedTask.entity) ifFailureThen asServiceError
-      _              <- taskEventPublisher.publish(unAssignedTask.event) ifFailureThen asServiceError
-    } yield savedTask
-  }
+  def unAssignFromTask(taskId: TaskId): Either[ServiceError, Task] =
+    tx { implicit uow =>
+      for {
+        task           <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
+        unAssignedTask <- task.unAssign ifLeftThen asServiceError
+        savedTask      <- taskRepository.save(unAssignedTask.entity) ifFailureThen asServiceError
+        _              <- taskEventPublisher.publish(unAssignedTask.event) ifFailureThen asServiceError
+      } yield savedTask
+    }
 
   def commentToTask(taskId: TaskId, commenterId: UserId, message: CommentMessage): Either[ServiceError, Task] =
-    tx { implicit uof =>
+    tx { implicit uow =>
       import crossroad0201.dddonscala.domain.task._
 
       for {
@@ -72,7 +101,7 @@ trait TaskService extends TransactionAware {
     }
 
   def closeTask(taskId: TaskId): Either[ServiceError, Task] =
-    tx { implicit uof =>
+    tx { implicit uow =>
       for {
         task       <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
         closedTask <- task.close ifLeftThen asServiceError
@@ -82,7 +111,7 @@ trait TaskService extends TransactionAware {
     }
 
   def reOpenTask(taskId: TaskId): Either[ServiceError, Task] =
-    tx { implicit uof =>
+    tx { implicit uow =>
       for {
         task         <- taskRepository.get(taskId) ifNotExists NotFoundError("TASK", taskId)
         reOpenedTask <- task.reOpen ifLeftThen asServiceError

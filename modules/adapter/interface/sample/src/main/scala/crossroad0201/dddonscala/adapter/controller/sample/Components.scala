@@ -9,6 +9,8 @@ import crossroad0201.dddonscala.domain.task.{TaskEventPublisher, TaskRepository}
 import crossroad0201.dddonscala.domain.user.UserRepository
 import crossroad0201.dddonscala.query.taskview.TaskViewQueryProcessor
 
+// NOTE: アプリケーションサービス や クエリプロセッサ にインフラを依存性注入して実行可能なインスタンスを生成します。
+
 object Components {
 
   val TaskService = new TaskService with InfrastructureAware {
