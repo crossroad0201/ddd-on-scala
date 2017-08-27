@@ -11,6 +11,12 @@ import scala.util.Try
  * リポジトリの呼び出しをアプリケーションサービスに限定することで、副作用を局所化できます。
  */
 
+/*
+ * NOTE: リポジトリは自集約のエンティティだけを永続化します。他集約のエンティティを扱ってはいけません。
+ * 自集約と他集約のエンティティを合成（JOIN）して扱う必要が有る場合は、
+ * CQRSパターンのクエリモデルを使用します。
+ */
+
 trait TaskRepository {
 
   def get(id: TaskId)(implicit uof: UnitOfWork): Try[Option[Task]]
