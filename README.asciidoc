@@ -7,7 +7,7 @@ https://www.scala-lang.org[Scala] による https://www.amazon.co.jp/dp/47981219
 [NOTE]
 ====
 実装上のポイントを、コード中に `NOTE:` でコメントしています。 +
-`NOTE:` でテキスト検索するなどして参照してください。
+https://github.com/crossroad0201/ddd-on-scala/search?utf8=%E2%9C%93&q=NOTE%3A&type=[NOTE: で テキスト検索] するなどして参照してください。
 ====
 
 == セットアップ
