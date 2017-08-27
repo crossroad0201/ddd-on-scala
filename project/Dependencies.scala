@@ -8,9 +8,9 @@ object Dependencies {
   )
 
   lazy val InfrastructureDepends = Seq(
-    "org.mariadb.jdbc" % "mariadb-java-client" % "2.1.0",
     "org.scalikejdbc" %% "scalikejdbc" % "3.0.2",
     "org.scalikejdbc" %% "scalikejdbc-config"  % "3.0.2",
+    "com.h2database"  %  "h2"                % "1.4.196",
     "org.scalikejdbc" %% "scalikejdbc-test" % "3.0.2" % Test
   )
 }

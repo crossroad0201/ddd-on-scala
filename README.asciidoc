@@ -1,12 +1,8 @@
 :toc:
 
-= Sandbox
+= DDD on Scala
 
-Now printing...
-
-* TODO 概要
-* TODO プロジェクトの構成
-* TODO 概念モデル
+https://www.scala-lang.org[Scala] による https://www.amazon.co.jp/dp/4798121967[DDD（ドメイン駆動設計）] の実装サンプルです。
 
 == セットアップ
 
@@ -14,16 +10,12 @@ Now printing...
 
 * JDK 1.8 以上
 * http://www.scala-sbt.org/index.html[sbt]
-* https://www.docker.com[Docker]
-
 
 === DBの準備
 
-* **Docker Compose** でDBサーバ（ https://mariadb.org[MariaDB] ）を起動します。
-====
-> $ cd ddd-on-scala +
-> $ docker-compose up -d
-====
+このサンプルでは、一部で http://www.h2database.com/html/main.html[組み込みのH2データベース] を使用したコード例があります。
+
+サンプルの実行前にDBを作成します。
 
 * **sbt** でDBにテーブルを作成します。
 ====
@@ -33,7 +25,7 @@ Now printing...
 == ビルドと実行
 
 このサンプルはアプリケーションとしてのエンドポイントはありません。 +
-実行は **sbt** からユニットテストを実行して確認してください。
+動作は **sbt** からユニットテストを実行して確認してください。
 
 ====
 > $ sbt test
@@ -43,13 +35,33 @@ Now printing...
 
 === レイヤ・モジュール構成
 
+このサンプルでは、 http://jeffreypalermo.com/blog/the-onion-architecture-part-1/[オニオンアーキテクチャ] をもとにした
+レイヤ・モジュール構成を採用しています。
+
 image:doc/Layer.png[]
 
+[format="csv",options=["header"]]
+|===
+レイヤ,責務,依存するレイヤ
+ドメイン,ドメイン（業務）の関心事と仕様をモデル化します。,なし
+アプリケーション,ドメインを使用して、ユースケースを実現します。,ドメイン
+インフラストラクチャ,アプリケーションの実行結果を永続化します。,アプリケーション / ドメイン
+インターフェース,利用者へのユーザーインターフェースを提供します。,インフラストラクチャ / アプリケーション / ドメイン
+|===
+
+* `ドメインレイヤ` と `アプリケーションレイヤ` は特定のインフラストラクチャに依存しないので、
+インフラストラクチャの変更が容易になります。 +
+また、ユニットテストを簡単かつ軽量に実施することができます。
+
 === コンポーネント構成
+
+このサンプルのコンポーネント構成は下図の通りです。
 
 image:doc/Components.png[]
 
 === 概念モデル
+
+このサンプルで扱う対象のドメインは下図の通りです。
 
 image:doc/DomainModel.png[]
 
@@ -77,6 +89,11 @@ ScalaでRDBにアクセスするライブラリ。
 
 * http://labs.gree.jp/blog/2013/12/9354/[Scalaコードでわかった気になるDDD] +
 Scalaを使ったDDDの解説。
+
+=== アーキテクチャ
+
+* http://jeffreypalermo.com/blog/the-onion-architecture-part-1/[The Onion Architecture : part 1]
+* http://qiita.com/gki/items/91386b082c57123f1ba0[Clean Architectureで分からなかったところを整理する]
 
 === その他
 

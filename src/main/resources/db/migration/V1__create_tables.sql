@@ -6,7 +6,7 @@ CREATE TABLE tasks (
   assignee_id VARCHAR(50),
   version INT NOT NULL,
   PRIMARY KEY (task_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 CREATE TABLE task_comments (
   id INT NOT NULL AUTO_INCREMENT,
@@ -14,6 +14,5 @@ CREATE TABLE task_comments (
   message VARCHAR(200) NOT NULL,
   commenter_id VARCHAR(50) NOT NULL,
   PRIMARY KEY (id),
-  KEY entity_id (task_id),
   CONSTRAINT entity_id FOREIGN KEY (task_id) REFERENCES tasks (task_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);

@@ -26,11 +26,11 @@ class TaskRepositoryOnRDBSpec
   override protected def afterAll() = DBs.closeAll
 
   override def fixture(implicit session: DBSession) {
-    sql"""INSERT INTO tasks value ('TESTTASK001', 'テストタスク１', 'OPENED', 'USER001', NULL, 1)""".update.apply
+    sql"""INSERT INTO tasks VALUES ('TESTTASK001', 'テストタスク１', 'OPENED', 'USER001', NULL, 1)""".update.apply
 
-    sql"""INSERT INTO tasks value ('TESTTASK002', 'テストタスク２', 'CLOSED', 'USER001', 'USER002', 1)""".update.apply
-    sql"""INSERT INTO task_comments value (1, 'TESTTASK002', 'ひとつめのコメント', 'USER001')""".update.apply
-    sql"""INSERT INTO task_comments value (2, 'TESTTASK002', 'ふたつめのコメント', 'USER002')""".update.apply
+    sql"""INSERT INTO tasks VALUES ('TESTTASK002', 'テストタスク２', 'CLOSED', 'USER001', 'USER002', 1)""".update.apply
+    sql"""INSERT INTO task_comments VALUES (1, 'TESTTASK002', 'ひとつめのコメント', 'USER001')""".update.apply
+    sql"""INSERT INTO task_comments VALUES (2, 'TESTTASK002', 'ふたつめのコメント', 'USER002')""".update.apply
   }
 
   "get" when {

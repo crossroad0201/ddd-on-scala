@@ -52,9 +52,8 @@ lazy val rdb = (project in file("modules/adapter/infrastructure/rdb"))
     name := "dddonscala-rdb",
     libraryDependencies ++= InfrastructureDepends,
     // Flyway でデータベースをマイグレーションするための接続情報
-    flywayUrl := "jdbc:mariadb://localhost:3306/dddonscala",
-    flywayUser := "root",
-    flywayPassword := "dddonscala"
+    flywayUrl := "jdbc:h2:file:./.db/h2/dddonscala",
+    flywayUser := "sa"
   )
 
 lazy val kafka = (project in file("modules/adapter/infrastructure/kafka"))
