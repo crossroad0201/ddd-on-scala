@@ -10,7 +10,7 @@ package crossroad0201.dddonscala.domain.task
 
 object TaskService {
 
-  def example(task: Task): Task = {
+  def applyBusinessRuleTo(task: Task): Task = {
     // 何らかのドメインの処理を実行して、結果を返します。（このサンプルでは適切な例がないので引数をそのまま返しています）
     task
   }

@@ -56,7 +56,7 @@ trait TaskService extends TransactionAware {
       for {
         author <- userRepository.get(authorId) ifNotExists NotFoundError("USER", authorId)
         createdTask  = author.createTask(name)
-        exampledTask = TaskDomainService.example(createdTask.entity)
+        exampledTask = TaskDomainService.applyBusinessRuleTo(createdTask.entity)
         savedTask <- taskRepository.save(exampledTask) ifFailureThen asServiceError
         _         <- taskEventPublisher.publish(createdTask.event) ifFailureThen asServiceError
       } yield savedTask
