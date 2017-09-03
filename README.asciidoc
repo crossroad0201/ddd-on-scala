@@ -77,6 +77,8 @@ image:doc/Layer.png[レイヤ構成図]
 
 このサンプルのコンポーネント構成は下図の通りです。
 
+link:modules/application/src/main/scala/crossroad0201/dddonscala/application/task/TaskService.scala[アプリケーションサービス] からコードを追っていくと、全体が把握しやすいと思います。
+
 image:doc/Components.png[コンポーネント図]
 
 === 概念モデル
