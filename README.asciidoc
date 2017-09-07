@@ -112,6 +112,8 @@ ScalaでRDBにアクセスするライブラリ。
 
 * http://labs.gree.jp/blog/2013/12/9354/[Scalaコードでわかった気になるDDD] +
 Scalaを使ったDDDの解説。
+* http://www.qcontokyo.com/data_2016/pdf/B-2_2_JunichiKato.pdf[DDD実践(ベスト)プラクティス｛ドメインイベントとマイクロサービスと組織の関係｝] +
+CQRSパターンとドメインイベント／イベントソーシングの解説。
 
 === アーキテクチャ
 
