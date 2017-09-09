@@ -8,6 +8,7 @@ https://www.scala-lang.org[Scala] による https://www.amazon.co.jp/dp/47981219
 
 Scalaの関数型言語の特徴を活かして、 *イミュータブル* で *副作用のない（副作用を局所化した）* DDDの実装を目指しています。
 
+当サンプルの解説は、 https://speakerdeck.com/crossroad0201/scala-on-ddd[こちらのスライド] を参照してください。
 
 [NOTE]
 ====
