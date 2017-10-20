@@ -119,6 +119,7 @@ CQRSパターンとドメインイベント／イベントソーシングの解�
 === アーキテクチャ
 
 * http://jeffreypalermo.com/blog/the-onion-architecture-part-1/[The Onion Architecture : part 1]
+* https://qiita.com/little_hand_s/items/2040fba15d90b93fc124[ドメイン駆動 + オニオンアーキテクチャ概略]
 * http://qiita.com/gki/items/91386b082c57123f1ba0[Clean Architectureで分からなかったところを整理する]
 
 === その他
