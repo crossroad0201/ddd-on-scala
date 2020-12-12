@@ -31,7 +31,7 @@ package object application {
   }
 
   implicit class TryOptionOps[T](maybeValue: Try[Option[T]]) {
-    def ifNotExists(f: => ServiceError)(): Either[ServiceError, T] = {
+    def ifNotExists(f: => ServiceError): Either[ServiceError, T] = {
       maybeValue match {
         case Success(Some(s)) => Right(s)
         case Success(None)    => Left(f)
